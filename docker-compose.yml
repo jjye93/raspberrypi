@@ -42,6 +42,24 @@ services:
       - '/dev/sda1:/media/drive1'
       - '/dev/sdb1:/media/drive2'
       - '/media/downloads:/downloads'
+    ports:
+      - '8989:8989'
+    restart: 'unless-stopped'
+
+  whisparr:
+    image: 'ghcr.io/hotio/whisparr:latest'
+    container_name: whisparr
+    environment:
+      - 'PUID=1000'
+      - 'PGID=1000'
+      - 'TZ=Asia/Kuala_Lumpur'
+      - 'UMASK=022'
+    volumes:
+      - './whisparr:/config'
+      - '/media/downloads:/downloads'
+      - '/dev/sda1:/media/drive1'
+      - '/dev/sdb1:/media/drive2'
+      - '/media:/media/local'
     restart: 'unless-stopped'
 
   prowlarr:
