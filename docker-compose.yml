@@ -1,0 +1,208 @@
+services:
+
+  portainer:
+    image: 'portainer/portainer-ce:latest'
+    container_name: portainer
+    ports:
+      - '9000:9000'
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - './portainer:/data'
+    restart: 'unless-stopped'
+  
+  radarr:
+    image: 'lscr.io/linuxserver/radarr:latest'
+    container_name: radarr
+    environment:
+      - 'PUID=1000'
+      - 'PGID=1000'
+      - 'TZ=Asia/Kuala_Lumpur'
+      - 'UMASK=022'
+    ports:
+      - '7878:7878'
+    volumes:
+      - './radarr:/config'
+      - '/media/local:/media/local'
+      - '/dev/sda1:/media/drive1'
+      - '/dev/sdb1:/media/drive2'
+      - '/media/downloads:/downloads'
+    restart: 'unless-stopped'
+
+  sonarr:
+    image: 'lscr.io/linuxserver/sonarr:latest'
+    container_name: sonarr
+    environment: 
+      - 'PUID=1000'
+      - 'PGID=1000'
+      - 'TZ=Asia/Kuala_Lumpur'
+      - 'UMASK=022'
+    volumes:
+      - './sonarr:/config'
+      - '/media/local:/media/local'
+      - '/dev/sda1:/media/drive1'
+      - '/dev/sdb1:/media/drive2'
+      - '/media/downloads:/downloads'
+    restart: 'unless-stopped'
+
+  prowlarr:
+    image: 'lscr.io/linuxserver/prowlarr:latest'
+    container_name: prowlarr
+    environment:
+      - 'PUID=1000'
+      - 'PGID=1000'
+      - 'TZ=Asia/Kuala_Lumpur'
+      - 'UMASK=022'
+    volumes:
+      - './prowlarr:/config'
+    ports:
+      - '9696:9696'
+    restart: 'unless-stopped'
+
+  flaresolverr:
+    image: 'ghcr.io/flaresolverr/flaresolverr:latest'
+    container_name: flaresolverr
+    environment:
+      - 'LOG_LEVEL=info'
+    ports:
+      - '8191:8191'
+    restart: 'unless-stopped'
+
+  qbittorrent:
+    image: linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - 'PUID=1000'
+      - 'PGID=1000'
+      - 'TZ=Asia/Kuala_Lumpur'
+      - 'WEBUI_PORT=8080'
+      - 'UMASK=022'
+    volumes:
+      - './qbittorrent:/config'
+      - '/media/local:/downloads'
+    ports:
+      - '8080:8080'
+      - '6881:6881'
+      - '6881:6881/udp'
+    restart: 'unless-stopped'
+
+  Aria2-pro:
+    image: 'p3terx/aria2-pro:latest'
+    container_name: aria2
+    environment:
+      - 'PUID=1000'
+      - 'PGID=1000'
+      - 'UMASK_SET=022'
+      - 'RPC_PORT=6800'
+      - 'RPC_SECRET=qwer1234'
+      - 'LISTEN_PORT=6888'
+      - 'DISK_CACHE=64M'
+      - 'IPV6_MODE=false'
+      - 'TZ=Asia/Kuala_Lumpur'
+      - 'UPDATE_TRACKERS=true'
+    volumes:
+      - './aria2:/config'
+      - '/media/local:/downloads'
+    network_mode: 'host'
+    restart: 'unless-stopped'
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '1m'
+
+  AriaNg:
+    image: 'p3terx/ariang'
+    container_name: ariang
+    command: --port 6880 --ipv6
+    network_mode: host
+    restart: 'unless-stopped'
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: 1m
+
+  transmission:
+    image: 'linuxserver/transmission:latest'
+    container_name: transmission
+    environment: 
+      - 'PUID=1000'
+      - 'PGID=1000'
+      - 'TZ=Asia/Kuala_Lumpur'
+      - 'TRANSMISSION_WEB_HOME=/config/webui/current'
+      - 'UMASK_SET=022'
+      - 'USER=admin'
+      - 'PASS=admin'
+    volumes:
+      - './transmission:/config'
+      - '/media/local:/downloads'
+      - './transmission/webui/current:/config/webui/current'
+      - './transmission/watch:/watch'
+    ports:
+      - '9091:9091'
+      - '51413:51413'
+      - '51413:51413/udp'
+    restart: 'unless-stopped'
+
+  plex:
+    image: 'lscr.io/linuxserver/plex:latest'
+    container_name: plex
+    network_mode: host
+    environment:
+      - 'PUID=1000'
+      - 'PGID=1000'
+      - 'TZ=Asia/Kuala_Lumpur'
+      - 'VERSION=docker'
+      - 'UMASK_SET=022'
+    volumes:
+      - './plex:/config'
+      - '/media:/media/local'
+      - '/dev/sda1:/media/drive1'
+      - '/dev/sdb1:/media/drive2'
+    restart: 'unless-stopped'
+
+  emby:
+    image: 'emby/embyserver_arm64v8:latest'
+    container_name: embyserver
+    network_mode: host 
+    environment:
+      - 'PUID=1000'
+      - 'PGID=1000'
+      - 'GIDLIST=100' 
+    volumes:
+      - './emby:/config' 
+      - '/media:/media/local'
+      - '/dev/sda1:/media/drive1'
+      - '/dev/sdb1:/media/drive2'    
+    restart: 'unless-stopped'
+
+  diun:
+    image: crazymax/diun:latest
+    container_name: diun
+    command: serve
+    volumes:
+      - './diun:/data'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    environment:
+      - 'TZ=Asia/Kuala_Lumpur'
+      - 'DIUN_WATCH_WORKERS=20'
+      - 'DIUN_WATCH_SCHEDULE=0 */6 * * *'
+      - 'DIUN_WATCH_JITTER=30s'
+      - 'DIUN_PROVIDERS_DOCKER=true'
+    labels:
+      - 'diun.enable=true'
+    restart: 'always'
+
+  alist:
+    image: 'xhofe/alist:latest'
+    container_name: 'alist'
+    volumes:
+      - './alist:/opt/alist/data'
+    ports:
+      - '5244:5244'
+      - '5245:5245'
+    environment:
+      - 'PUID=1000'
+      - 'PGID=1000'
+      - 'UMASK=022'
+      - 'TZ=Asia/Kuala_Lumpur'
+    restart: 'unless-stopped'
+  
