@@ -11,4 +11,4 @@ echo "Glances setting completed and host at http://localhost:61208"
 echo "----------------------------------------------------------------"
 echo " "
 echo "Calling root-ssh account Setup"
-curl https://
+curl https://raw.githubusercontent.com/jjye93/config-file/refs/heads/breakdown-script/ssh.sh | sudo bash
