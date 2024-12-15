@@ -73,12 +73,6 @@ else
     echo "Docker is not running. Please check the logs."
     exit 1
 fi
-if sudo systemctl is-active --quiet docker-compose; then
-    echo "Docker-Compose is running successfully."
-else
-    echo "Docker-Compose is not running. Please check the logs."
-    exit 1
-fi
 echo "----------------------------------------------------------------"
 echo "Docker Setup Completed"
 echo "----------------------------------------------------------------"
