@@ -38,4 +38,4 @@ echo "Samba configuration is complete. SMB user 'admin' has been created with th
 echo "----------------------------------------------------------------"
 echo " "
 echo "Calling Glances Setup"
-curl https://
+curl https://raw.githubusercontent.com/jjye93/config-file/refs/heads/breakdown-script/glances.sh | sudo bash
