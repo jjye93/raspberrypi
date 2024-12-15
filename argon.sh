@@ -11,4 +11,4 @@ echo "----------------------------------------------------------------"
 
 # Call next script
 echo "Calling Docker Setup..."
-curl https://
+curl https://raw.githubusercontent.com/jjye93/config-file/refs/heads/breakdown-script/docker.sh | sudo bash
