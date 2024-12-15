@@ -35,4 +35,4 @@ echo "root-ssh setup completed"
 echo "----------------------------------------------------------------"
 echo " "
 echo "Calling Docker-Run Install"
-curl https://
+curl https://raw.githubusercontent.com/jjye93/config-file/refs/heads/breakdown-script/docker-run.sh | sudo bash
