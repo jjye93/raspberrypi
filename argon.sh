@@ -10,5 +10,5 @@ echo "Argon One Setup Completed Successfully"
 echo "----------------------------------------------------------------"
 
 # Call next script
-echo "Calling Docker Setup..."
-curl https://raw.githubusercontent.com/jjye93/config-file/refs/heads/breakdown-script/docker.sh | sudo bash
+echo "Calling Rpi-connect Setup..."
+curl https://raw.githubusercontent.com/jjye93/config-file/refs/heads/breakdown-script/rpi-connect.sh | sudo bash
