@@ -11,4 +11,4 @@ echo "----------------------------------------------------------------"
 
 # Call next script
 echo "Calling Argon Setup..."
-curl -fsSL 
+curl https://raw.githubusercontent.com/jjye93/config-file/refs/heads/breakdown-script/argon.sh | sudo bash
