@@ -33,6 +33,3 @@ sudo systemctl start ssh || handle_error
 echo "----------------------------------------------------------------"
 echo "root-ssh setup completed"
 echo "----------------------------------------------------------------"
-echo " "
-echo "Calling Docker-Run Install"
-curl https://raw.githubusercontent.com/jjye93/config-file/refs/heads/breakdown-script/docker-run.sh | sudo bash
