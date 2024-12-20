@@ -1,20 +1,6 @@
 #!/bin/bash
 
-# Ensure rpi-connect is installed
-if ! command -v rpi-connect &> /dev/null; then
-    echo "Error: rpi-connect is not installed. Please install it first."
-    exit 1
-fi
 
-# Step 1: Start rpi-connect
-echo "Starting Raspberry Pi Connect..."
-rpi-connect on
-if [[ $? -ne 0 ]]; then
-    echo "Error: Failed to start Raspberry Pi Connect."
-    exit 1
-fi
-
-# Step 2: Trigger sign-in process and capture the link
 echo "Starting the sign-in process..."
 tempfile=$(mktemp)
 rpi-connect signin > "$tempfile" 2>&1 &
