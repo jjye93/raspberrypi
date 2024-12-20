@@ -36,6 +36,3 @@ sudo systemctl restart samba || handle_error
 echo "----------------------------------------------------------------"
 echo "Samba configuration is complete. SMB user 'admin' has been created with the password 'admin'."
 echo "----------------------------------------------------------------"
-echo " "
-echo "Calling Glances Setup"
-curl https://raw.githubusercontent.com/jjye93/config-file/refs/heads/breakdown-script/glances.sh | sudo bash
