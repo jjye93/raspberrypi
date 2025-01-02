@@ -1,15 +1,12 @@
 #!/usr/bin/bash
-set -e
-
 echo "----------------------------------------------------------------"
 echo "Commence Docker Setup"
 echo "----------------------------------------------------------------"
-sudo apt-get install -y docker.io docker-compose || handle_error
+sudo apt-get install -y docker.io docker-compose
 echo "----------------------------------------------------------------"
-sudo usermod -aG docker admin || handle_error "Adding user to Docker group"
-sudo systemctl enable docker.service || handle_error "Enabling Docker service"
-sudo systemctl start docker.service || handle_error "Starting Docker service"
-
+sudo usermod -aG docker admin
+sudo systemctl enable docker.service
+sudo systemctl start docker.service
 echo "----------------------------------------------------------------"
 echo "Docker Setup Completed"
 echo "----------------------------------------------------------------"
