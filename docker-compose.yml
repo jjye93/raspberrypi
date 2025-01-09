@@ -273,9 +273,6 @@ services:
       - '/media/local:/media/local'
       - '/drive/media:/media/drive'
     restart: 'unless-stopped'
-    networks:
-      ARRS:
-        ipv4_address: '192.19.0.13'
 
   diun:
     image: crazymax/diun:latest
