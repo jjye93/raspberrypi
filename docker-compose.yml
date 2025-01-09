@@ -1,15 +1,66 @@
+networks:
+  ARRS:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.19.0.0/24
+          gateway: 192.19.0.1
+
 services:
 
   portainer:
     image: 'portainer/portainer-ce:latest'
-    container_name: portainer
+    container_name: 'portainer'
     ports:
-      - '9000:9000'
+      - '9001:9000'
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - './portainer:/data'
     restart: 'unless-stopped'
+    networks:
+      ARRS:
+        ipv4_address: '192.19.0.2'
+
+  prowlarr:
+    image: 'lscr.io/linuxserver/prowlarr:latest'
+    container_name: 'prowlarr'
+    environment:
+      - 'PUID=1000'
+      - 'PGID=1000'
+      - 'TZ=Asia/Kuala_Lumpur'
+      - 'UMASK=022'
+    ports:
+      - '9002:9696'
+    volumes:
+      - './prowlarr:/config'
+      - '/media/torrents:/downloads'
+      - '/media/local:/media'
+    restart: 'unless-stopped'
+    networks:
+      ARRS:
+        ipv4_address: '192.19.0.3'
   
+  jackett:
+    image: 'lscr.io/linuxserver/jackett:latest'
+    container_name: 'jackett'
+    environment:
+      - 'PUID=1000'
+      - 'PGID=1000'
+      - 'TZ=Asia/Kuala_Lumpur'
+      - 'UMASK=022'
+      - 'AUTO_UPDATE=true'
+      - 'RUN_OPTS=true'
+    ports:
+      - '9003:9117'
+    volumes:
+      - './jackett:/data'
+      - '/media/torrents:/downloads'
+      - '/media/local:/media'
+    restart: 'unless-stopped'
+    networks:
+      ARRS:
+        ipv4_address: '192.19.0.4'
+
   radarr:
     image: 'lscr.io/linuxserver/radarr:latest'
     container_name: radarr
@@ -19,14 +70,18 @@ services:
       - 'TZ=Asia/Kuala_Lumpur'
       - 'UMASK=022'
     ports:
-      - '7878:7878'
+      - '9004:7878'
+    devices:
+      - '/dev/sda1:/drive1'
     volumes:
       - './radarr:/config'
-      - '/media/local:/media/local'
-      - '/dev/sda1:/media/drive1'
-      - '/dev/sdb1:/media/drive2'
-      - '/media/downloads:/downloads'
+      - '/media/torrents/movies:/media/downloads'
+      - '/drive1/media/movies:/media/drive'
+      - '/media/local/movies:/media/local'
     restart: 'unless-stopped'
+    networks:
+      ARRS:
+        ipv4_address: '192.19.0.5'
 
   sonarr:
     image: 'lscr.io/linuxserver/sonarr:latest'
@@ -36,42 +91,56 @@ services:
       - 'PGID=1000'
       - 'TZ=Asia/Kuala_Lumpur'
       - 'UMASK=022'
+    ports:
+      - '9005:8989'
+    devices:
+      - 'dev/sda1:/drive1'
     volumes:
       - './sonarr:/config'
-      - '/media/local:/media/local'
-      - '/dev/sda1:/media/drive1'
-      - '/dev/sdb1:/media/drive2'
-      - '/media/downloads:/downloads'
-    ports:
-      - '8989:8989'
+      - '/media/local/tvshows:/media/local/tvshows'
+      - '/media/local/drama:/media/local/drama'
+      - '/media/local/anime:/media/local/anime'
+      - '/media/torrents/tvshows:/downloads/tvshows'
+      - '/media/torrents/drama:/downloads/drama'
+      - '/media/torrents/anime:/downloads/anime'
+      - '/drive1/media/tvshows:/media/drive/tvshows'
+      - '/drive1/media/drama:/media/drive/drama'
+      - '/drive1/media/anime:/media/drive/anime'
     restart: 'unless-stopped'
+    networks:
+      ARRS:
+        ipv4_address: '192.19.0.6'
 
   whisparr:
     image: 'ghcr.io/hotio/whisparr:latest'
-    container_name: whisparr
+    container_name: 'whisparr'
     environment:
       - 'PUID=1000'
       - 'PGID=1000'
       - 'TZ=Asia/Kuala_Lumpur'
       - 'UMASK=022'
+    ports:
+      - '9006:6969'
+    devices:
+      - '/dev/sda1:/drive'
     volumes:
       - './whisparr:/config'
-      - '/media/downloads:/downloads'
-      - '/dev/sda1:/media/drive1'
-      - '/dev/sdb1:/media/drive2'
-      - '/media:/media/local'
+      - '/media/torrents/x:/downloads'
+      - '/media/local/x:/media/local'
+      - '/drive/media/x:/media/drive'
     restart: 'unless-stopped'
+    networks:
+      ARRS:
+        ipv4_address: '192.19.0.7'
 
-  prowlarr:
-    image: 'lscr.io/linuxserver/prowlarr:latest'
-    container_name: prowlarr
-    environment:
+  autobangumi:
+    image: 'ghcr.io/estrellaxd/auto_bangumi:latest'
+    container_name: 'autobangumi'
+    environment: 
       - 'PUID=1000'
       - 'PGID=1000'
       - 'TZ=Asia/Kuala_Lumpur'
       - 'UMASK=022'
-    volumes:
-      - './prowlarr:/config'
     ports:
       - '9696:9696'
     restart: 'unless-stopped'
@@ -81,44 +150,58 @@ services:
     container_name: flaresolverr
     environment:
       - 'LOG_LEVEL=info'
+      - 'LOG_HTML=${LOG_HTML:-false}'
+      - 'CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}'
+      - 'TZ=Asia/Kuala_Lumpur'
     ports:
-      - '8191:8191'
+      - '6001:8191'
     restart: 'unless-stopped'
+    networks:
+      ARRS:
+        ipv4_address: '192.19.0.9'
 
-  Aria2-pro:
-    image: 'p3terx/aria2-pro:latest'
-    container_name: aria2
+  jproxy:
+    image: 'luckypuppy514/jproxy:latest'
+    container_name: jproxy
     environment:
       - 'PUID=1000'
       - 'PGID=1000'
-      - 'UMASK_SET=022'
-      - 'RPC_PORT=6800'
-      - 'RPC_SECRET=qwer1234'
-      - 'LISTEN_PORT=6888'
-      - 'DISK_CACHE=64M'
-      - 'IPV6_MODE=false'
       - 'TZ=Asia/Kuala_Lumpur'
-      - 'UPDATE_TRACKERS=true'
+      - JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - '6002:8191'
+    restart: 'unless-stopped'
+    networks:
+      ARRS:
+        ipv4_address: '192.19.0.10'
+
+  aria2:
+    image: 'superng6/aria2:a2b-latest'
+    container_name: 'aria2'
+    network_mode: 'host'
+    cap_add:
+      - 'NET_ADMIN'
+    environment:
+      - 'PUID=1000'
+      - 'PGID=1000'
+      - 'TZ=Asia/Kuala_Lumpur'
+      - 'SECRET=qwer1234'
+      - 'CACHE=512M'
+      - 'PORT=6800'
+      - 'WEBUI=true'
+      - 'WEBUI_PORT=9007'
+      - 'BTPORT=32516'
+      - 'UT=true'
+      - 'QUIET=true'
+      - 'SMD=true'
+      - 'A2B=true'
+      - 'CRA2B=2h'
     volumes:
       - './aria2:/config'
-      - '/media/local:/downloads'
-    network_mode: 'host'
-    restart: 'unless-stopped'
-    logging:
-      driver: 'json-file'
-      options:
-        max-size: '1m'
-
-  AriaNg:
-    image: 'p3terx/ariang'
-    container_name: ariang
-    command: --port 6880 --ipv6
-    network_mode: host
-    restart: 'unless-stopped'
-    logging:
-      driver: 'json-file'
-      options:
-        max-size: 1m
+      - '~/downloads:/downloads'
+      - '/media/torrents:/torrents'
+      - '/lib/modules:/lib/modules'
+    restart: unless-stopped
 
   transmission:
     image: 'linuxserver/transmission:latest'
@@ -127,20 +210,51 @@ services:
       - 'PUID=1000'
       - 'PGID=1000'
       - 'TZ=Asia/Kuala_Lumpur'
-      - 'TRANSMISSION_WEB_HOME=/config/webui/current'
       - 'UMASK_SET=022'
       - 'USER=admin'
       - 'PASS=admin'
+    devices:
+      - '/dev/sda1:/drive'
     volumes:
       - './transmission:/config'
-      - '/media/local:/downloads'
-      - './transmission/webui/current:/config/webui/current'
+      - '/media/torrents:/downloads/incomplete'
+      - '/media/local:/downloads/complete'
       - './transmission/watch:/watch'
+      - '/drive/media:/drive'
     ports:
-      - '9091:9091'
+      - '9008:9091'
       - '51413:51413'
       - '51413:51413/udp'
     restart: 'unless-stopped'
+    networks:
+      ARRS:
+        ipv4_address: '192.19.0.11'
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kuala_Lumpur
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=6881
+      - UMASK=022
+    devices:
+      - /dev/sda1:/drive
+    volumes:
+      - ./qbittorrent:/config
+      - /media/torrents:/downloads/incomplete
+      - /media/local:/downloads/complete
+      - /drive/media:/drive
+    ports:
+      - 9009:8080
+      - 16881:6881
+      - 16881:6881/udp
+    restart: unless-stopped
+    networks:
+      ARRS:
+        ipv4_address: '192.19.0.12'
 
   plex:
     image: 'lscr.io/linuxserver/plex:latest'
@@ -152,27 +266,16 @@ services:
       - 'TZ=Asia/Kuala_Lumpur'
       - 'VERSION=docker'
       - 'UMASK_SET=022'
+    devices:
+      - '/dev/sda1:/drive'
     volumes:
       - './plex:/config'
-      - '/media:/media/local'
-      - '/dev/sda1:/media/drive1'
-      - '/dev/sdb1:/media/drive2'
+      - '/media/local:/media/local'
+      - '/drive/media:/media/drive'
     restart: 'unless-stopped'
-
-  emby:
-    image: 'emby/embyserver_arm64v8:latest'
-    container_name: embyserver
-    network_mode: host 
-    environment:
-      - 'PUID=1000'
-      - 'PGID=1000'
-      - 'GIDLIST=100' 
-    volumes:
-      - './emby:/config' 
-      - '/media:/media/local'
-      - '/dev/sda1:/media/drive1'
-      - '/dev/sdb1:/media/drive2'    
-    restart: 'unless-stopped'
+    networks:
+      ARRS:
+        ipv4_address: '192.19.0.13'
 
   diun:
     image: crazymax/diun:latest
@@ -191,18 +294,34 @@ services:
       - 'diun.enable=true'
     restart: 'always'
 
-  alist:
-    image: 'xhofe/alist:latest'
-    container_name: 'alist'
-    volumes:
-      - './alist:/opt/alist/data'
-    ports:
-      - '5244:5244'
-      - '5245:5245'
+  tautulli:
+    image: 'lscr.io/linuxserver/tautulli:latest'
+    container_name: 'tautulli'
     environment:
       - 'PUID=1000'
       - 'PGID=1000'
-      - 'UMASK=022'
       - 'TZ=Asia/Kuala_Lumpur'
+    volumes:
+      - './tautulli:/config'
+    ports:
+      - 9010:8181
+    restart: unless-stopped
+    networks:
+      ARRS:
+        ipv4_address: '192.19.0.13'
+
+  overseerr:
+    image: 'lscr.io/linuxserver/overseerr:latest'
+    container_name: 'overseerr'
+    environment:
+      - 'PUID=1000'
+      - 'PGID=1000'
+      - 'TZ=Asia/Kuala_Lumpur'
+    volumes:
+      - './overseerr:/config'
+    ports:
+      - '9011:5055'
     restart: 'unless-stopped'
-  
+    networks:
+      ARRS:
+        ipv4_address: '192.19.0.14'
