@@ -1,0 +1,18 @@
+services:
+
+  radarr:
+    image: 'lscr.io/linuxserver/radarr:latest'
+    container_name: radarr
+    environment:
+      - 'PUID=1000'
+      - 'PGID=1000'
+      - 'TZ=Asia/Kuala_Lumpur'
+      - 'UMASK=022'
+    ports:
+      - '7878:7878'
+    volumes:
+      - './radarr:/config'
+      - '/media/local:/media/local'
+      - '/media/torrent:/media/torrent'
+      - '~/Downloads:/downloads'
+    restart: 'unless-stopped'
