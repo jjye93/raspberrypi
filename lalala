@@ -1,0 +1,58 @@
+#!/usr/bin/bash
+echo "update"
+sudo apt update && sudo apt full-upgrade -y
+echo "completed"
+echo "argon-neo"
+curl https://download.argon40.com/argon-eeprom.sh | bash && curl https://download.argon40.com/argonneo5.sh | bash
+echo "completed"
+echo "samba"
+sudo apt-get install samba -y
+sudo systemctl stop samba
+sudo mv /etc/samba/smb.conf /etc/samba/smb.conf.backup
+sudo wget -O /etc/samba/smb.conf https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/smb.conf
+sudo chmod 644 /etc/samba/smb.conf
+sudo chown root:root /etc/samba/smb.conf
+sudo systemctl enable samba && sudo systemctl start samba
+if ! command -v expect &> /dev/null
+then
+    echo "Expect is not installed, installing..."
+    sudo apt-get install -y expect
+fi
+
+expect <<EOF
+spawn sudo smbpasswd -a admin
+expect "New SMB password:"
+send "admin\r"
+expect "Retype new SMB password:"
+send "admin\r"
+expect eof
+EOF
+sudo systemctl restart samba
+echo "completed"
+echo "docker"
+sudo apt-get update
+sudo apt-get install ca-certificates curl -y
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+sudo groupadd docker
+sudo usermod -aG docker $USER
+sudo systemctl enable docker.service
+sudo systemctl start docker.service
+sudo systemctl enable containerd.service
+sudo systemctl start containerd.service
+echo "completed"
+echo "infortress"
+sudo mkdir -p /etc/infortress
+sudo wget -O /etc/infortress/infortresserver https://infortress.s3.cn-northwest-1.amazonaws.com.cn/infortresserver/v1.0.21/linux/arm64/infortresserver
+cd /etc/infortress
+sudo chmod 755 infortresserver
+sudo ./infortresserver install
+sudo ./infortresseever start
+echo "complete"
