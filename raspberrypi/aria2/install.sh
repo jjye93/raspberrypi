@@ -12,5 +12,12 @@ sudo wget -O /etc/systemd/system/aria2.service https://raw.githubusercontent.com
 sudo chmod 755 /etc/systemd/system/aria2.service
 sudo systemctl enable aria2
 sudo systemctl start aria2
-sudo reboot
+git clone https://github.com/ziahamza/webui-aria2.git
+sudo mv webui-aria2 /etc/
+cd /etc/webui-aria2
+sudo apt install npm -y
+sudo npm install -g pm2
+sudo env PATH=$PATH:/usr/bin /usr/local/lib/node_modules/pm2/bin/pm2 startup systemd -u admin --hp /home/admin
+pm2 start node-server.js
+pm2 save
 echo "complete"
