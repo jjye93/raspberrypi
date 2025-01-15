@@ -4,7 +4,7 @@ sudo apt-get update && sudo apt-get full-upgrade && sudo apt-get install curl -y
 sudo curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs git make g++ gcc libsystemd-dev
 sudo mkdir -p /opt/zigbee2mqtt
-sudo chown -R aj: /opt/zigbee2mqtt
+sudo chown -R $USER: /opt/zigbee2mqtt
 git clone --depth 1 https://github.com/Koenkk/zigbee2mqtt.git /opt/zigbee2mqtt
 cd /opt/zigbee2mqtt
 npm ci
