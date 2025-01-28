@@ -9,6 +9,5 @@ git clone --depth 1 https://github.com/Koenkk/zigbee2mqtt.git /etc/zigbee2mqtt
 cd /etc/zigbee2mqtt
 pnpm i --frozen-lockfile
 pnpm run build
-cp /etc/zigbee2mqtt/data/configuration.example.yaml /etc/zigbee2mqtt/data/configuration.yaml
-
-
+sudo wget -O /etc/zigbee2mqtt/data/configuration.yaml https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/zigbee2mqtt/configuration.yaml
+sudo chmod 777 /etc/zigbee2mqtt/data/configuration.yaml
