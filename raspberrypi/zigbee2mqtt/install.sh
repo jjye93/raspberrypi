@@ -15,4 +15,4 @@ sudo wget -O /etc/systemd/system/zigbee2mqtt.service https://raw.githubuserconte
 sudo chmod 777 /etc/systemd/system/zigbee2mqtt.service
 sudo systemctl start zigbee2mqtt
 sudo systemctl enable zigbee2mqtt
-echo "completed"
+echo "completed and hosted on port 8883"
