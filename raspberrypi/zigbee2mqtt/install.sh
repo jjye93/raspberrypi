@@ -11,3 +11,8 @@ pnpm i --frozen-lockfile
 pnpm run build
 sudo wget -O /etc/zigbee2mqtt/data/configuration.yaml https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/zigbee2mqtt/configuration.yaml
 sudo chmod 777 /etc/zigbee2mqtt/data/configuration.yaml
+sudo wget -O /etc/systemd/system/zigbee2mqtt.service https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/zigbee2mqtt/zigbee2mqtt.service
+sudo chmod 777 /etc/systemd/system/zigbee2mqtt.service
+sudo systemctl start zigbee2mqtt
+sudo systemctl enable zigbee2mqtt
+echo "completed"
