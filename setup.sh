@@ -15,7 +15,6 @@ echo "----------------------------------------------------------------"
 echo "Commence Docker Setup"
 echo "----------------------------------------------------------------"
 curl https://get.docker.com |sudo bash
-sudo groupadd docker
 sudo usermod -aG docker admin
 sudo systemctl start docker.service
 sudo systemctl start containerd.service
@@ -23,7 +22,6 @@ sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
 echo "----------------------------------------------------------------"
 echo "Completed"
-echo "----------------------------------------------------------------"
 echo "----------------------------------------------------------------"
 echo "Samba"
 echo "----------------------------------------------------------------"
@@ -54,12 +52,7 @@ echo "Completed"
 echo "----------------------------------------------------------------"
 echo "SSH"
 echo "----------------------------------------------------------------"
-if ! command -v expect &> /dev/null
-then
-    echo "Expect is not installed, installing..."
-    sudo apt-get install -y expect
-fi
-
+sudo apt install expect -y
 expect <<EOF
 spawn sudo passwd root
 expect "New password:"
@@ -228,7 +221,8 @@ echo "Completed"
 echo "----------------------------------------------------------------"
 echo "Alist"
 echo "----------------------------------------------------------------"
-sudo docker run -d --name alist --restart always -v '/etc/alist:/opt/alist/data' -v '/etc/alist/data:/data' -p '5244:5244' -p '5245:5245 -e 'PUID=1000' -e 'PGID=1000' -e 'TZ=Asia/Kuala_Lumpur' -e 'UMASK=022' xhofe/alist:latest
+sudo docker run -d --name alist --restart always -v '/etc/alist:/opt/alist/data' -v '/etc/alist/data:/data' -p '5244:5244' -p '5245:5245' -e 'PUID=1000' -e 'PGID=1000' -e 'TZ=Asia/Kuala_Lumpur' -e 'UMASK=022' xhofe/alist:latest
+sleep 10s
 sudo docker exec -it alist ./alist admin set qwer1234
 echo "----------------------------------------------------------------"
 echo "Completed"
