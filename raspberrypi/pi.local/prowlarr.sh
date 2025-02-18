@@ -28,4 +28,5 @@ rm Prowlarr*.linux*.tar.gz
 echo "----------------------------------------------------------------"
 echo "Completed"
 echo "----------------------------------------------------------------"
+sleep 5s
 curl https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/pi.local/qbittorrent.sh | sudo bash
