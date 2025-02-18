@@ -2,7 +2,7 @@
 echo "----------------------------------------------------------------"
 echo "Update & Upgrade"
 echo "----------------------------------------------------------------"
-sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install ca-certificate bash curl sudo git -y
+sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install bash curl sudo git -y
 echo "----------------------------------------------------------------"
 echo "Completed"
 echo "----------------------------------------------------------------"
