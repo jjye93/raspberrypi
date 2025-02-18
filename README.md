@@ -1,5 +1,5 @@
-pi setup script
-echo ""
+Pi setup script
+  
 run
-echo ""
+  
 curl https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/setup.sh | sudo bash
