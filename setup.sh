@@ -155,7 +155,7 @@ sudo wget -O /etc/transmission-daemon/settings.json https://raw.githubuserconten
 sudo chmod 777 /etc/transmission-daemon/settings.json && sudo chown root:root /etc/transmission-daemon/settings.json
 sudo service transmission-daemon reload
 sudo systemctl start transmission-daemon
-sudo ststemctl enable transmission-daemon
+sudo systemctl enable transmission-daemon
 echo "----------------------------------------------------------------"
 echo "Completed"
 echo "----------------------------------------------------------------"
