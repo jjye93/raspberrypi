@@ -19,4 +19,5 @@ sudo systemctl enable transmission-daemon
 echo "----------------------------------------------------------------"
 echo "Completed"
 echo "----------------------------------------------------------------"
+sleep 5s
 curl https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/pi.local/aria2.sh | sudo bash
