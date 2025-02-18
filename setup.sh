@@ -8,7 +8,7 @@ echo "Completed"
 echo "----------------------------------------------------------------"
 echo "Commence Argon Neo Setup"
 echo "----------------------------------------------------------------"
-curl https://download.argon40.com/argonneo.sh | bash 
+curl https://download.argon40.com/argon-eeprom.sh | bash && curl https://download.argon40.com/argonneo5.sh | bash
 echo "----------------------------------------------------------------"
 echo "Completed"
 echo "----------------------------------------------------------------"
@@ -17,8 +17,6 @@ echo "----------------------------------------------------------------"
 curl https://get.docker.com |sudo bash
 sudo groupadd docker
 sudo usermod -aG docker admin
-sudo chown admin:admin /home/admin/.docker -R
-sudo chmod g+rwx /home/admin/.docker -R
 sudo systemctl start docker.service
 sudo systemctl start containerd.service
 sudo systemctl enable docker.service
@@ -146,14 +144,13 @@ sudo systemctl stop transmission-daemon
 sudo mkdir -p /home/admin/.transmission/process
 sudo chown -R admin:admin /home/admin/.transmission/process
 sudo usermod -a -G debian-transmission admin
-chgrp debian-transmission /home/admin/.transmission/progress
+chgrp debian-transmission /home/admin/.transmission/process
 chgrp debian-transmission /home/admin/Downloads
-chmod 770 /home/admin/.transmission/progress
+chmod 770 /home/admin/.transmission/process
 chmod 770 /home/admin/Downloads
 sudo mv /etc/transmission-daemon/settings.json /etc/transmission-daemon/settings.json.backup
 sudo wget -O /etc/transmission-daemon/settings.json https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/transmission/settings.json
 sudo chmod 777 /etc/transmission-daemon/settings.json && sudo chown root:root /etc/transmission-daemon/settings.json
-sudo service transmission-daemon reload
 sudo systemctl start transmission-daemon
 sudo systemctl enable transmission-daemon
 echo "----------------------------------------------------------------"
@@ -187,7 +184,7 @@ max-upload-limit=64K
 seed-ratio=0.1
 seed-time=0
 EOF
-cat << EOF | sudo tee /etc/systemd/system/aria2.services > /dev/null
+cat << EOF | sudo tee /etc/systemd/system/aria2.service > /dev/null
 [Unit]
 Description=Aria2
 Requires=network.target
@@ -231,7 +228,7 @@ echo "Completed"
 echo "----------------------------------------------------------------"
 echo "Alist"
 echo "----------------------------------------------------------------"
-sudo docker run -d --name alist --restart always -v '/etc/alist:/opt/alist/data' -v '/etc/alist/data:/data' -p '5244:5244' -e 'PUID=1000' -e 'PGID=1000' -e 'TZ=Asia/Kuala_Lumpur' -e 'UMASK=022' xhofe/alist:latest
+sudo docker run -d --name alist --restart always -v '/etc/alist:/opt/alist/data' -v '/etc/alist/data:/data' -p '5244:5244' -p '5245:5245 -e 'PUID=1000' -e 'PGID=1000' -e 'TZ=Asia/Kuala_Lumpur' -e 'UMASK=022' xhofe/alist:latest
 sudo docker exec -it alist ./alist admin set qwer1234
 echo "----------------------------------------------------------------"
 echo "Completed"
