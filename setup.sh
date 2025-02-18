@@ -6,13 +6,13 @@ sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install bash curl
 echo "----------------------------------------------------------------"
 echo "Completed"
 echo "----------------------------------------------------------------"
-echo "Commence Argon Neo Setup"
+echo "ArgonNeo"
 echo "----------------------------------------------------------------"
 curl https://download.argon40.com/argon-eeprom.sh | bash && curl https://download.argon40.com/argonneo5.sh | bash
 echo "----------------------------------------------------------------"
 echo "Completed"
 echo "----------------------------------------------------------------"
-echo "Commence Docker Setup"
+echo "Docker"
 echo "----------------------------------------------------------------"
 curl https://get.docker.com |sudo bash
 sudo usermod -aG docker admin
