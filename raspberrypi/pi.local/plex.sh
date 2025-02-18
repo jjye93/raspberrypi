@@ -10,4 +10,5 @@ sudo apt install plexmediaserver -y
 echo "----------------------------------------------------------------"
 echo "Completed"
 echo "----------------------------------------------------------------"
+sleep 5s
 curl https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/pi.local/prowlarr.sh | sudo bash
