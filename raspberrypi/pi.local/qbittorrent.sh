@@ -22,4 +22,5 @@ sudo systemctl enable qbittorrent
 echo "----------------------------------------------------------------"
 echo "Completed"
 echo "----------------------------------------------------------------"
+sleep 5s
 curl https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/pi.local/transmission.sh | sudo bash
