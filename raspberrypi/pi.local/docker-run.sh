@@ -26,6 +26,7 @@ echo "transmission; http://pi.local:9091 with id admin and password qwer1234"
 echo "qbittorent; http://pi.local:8081"
 echo "alist; http://pi.local:5244 with id admin and password qwer1234"
 echo "plex media server; http://pi.local:32400/web"
+sudo apt-get update && sudo apt-get full-upgrade -y
 echo "----------------------------------------------------------------"
 echo "please perform a reboot"
 echo "----------------------------------------------------------------"
