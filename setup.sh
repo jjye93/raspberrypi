@@ -1,102 +1,41 @@
 #!/usr/bin/bash
-echo " "
-echo " "
-echo " "
-# System Upgrade
 echo "----------------------------------------------------------------"
-echo "Commence System Upgrade"
+echo "Update & Upgrade"
 echo "----------------------------------------------------------------"
-sudo apt-get update && sudo apt-get upgrade -y
+sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install ca-certificate bash curl sudo git -y
 echo "----------------------------------------------------------------"
-echo "System Upgrade Completed"
+echo "Completed"
 echo "----------------------------------------------------------------"
-echo " "
-echo " "
-echo " "
-# Argon One setup
-if ! command -v curl &> /dev/null; then
-    echo "curl not found. Installing curl..."
-    sudo apt-get update
-    sudo apt-get install curl -y
-fi
+echo "Commence Argon Neo Setup"
 echo "----------------------------------------------------------------"
-echo "Commence Argon One Setup"
+curl https://download.argon40.com/argonneo.sh | bash 
 echo "----------------------------------------------------------------"
-curl https://download.argon40.com/argon1.sh | bash 
-if [ $? -eq 0 ]; then
-    echo "----------------------------------------------------------------"
-    echo "Argon One Setup Completed Successfully, Enter "argon-config" for configuration"
-    echo "----------------------------------------------------------------"
-else
-    echo "----------------------------------------------------------------"
-    echo "Error during Argon One Setup"
-    echo "----------------------------------------------------------------"
-    exit 1
-fi
-echo " "
-echo " "
-echo " "
-# Docker setup
+echo "Completed"
 echo "----------------------------------------------------------------"
 echo "Commence Docker Setup"
 echo "----------------------------------------------------------------"
-echo "Updating package lists..."
-sudo apt-get update
-echo "Installing docker"
-sudo apt-get install -y docker.io docker-compose
-if ! command -v docker &> /dev/null; then
-    echo "Docker installation failed. Exiting..."
-    exit 1
-fi
-if ! command -v docker-compose &> /dev/null; then
-    echo "Docker-Compose installation failed. Exiting..."
-    exit 1
-fi
-echo "----------------------------------------------------------------"
-echo "Adding user 'admin' to the Docker group..."
+curl https://get.docker.com |sudo bash
+sudo groupadd docker
 sudo usermod -aG docker admin
-echo "----------------------------------------------------------------"
-echo "Enabling Docker services to start on boot..."
+sudo chown admin:admin /home/admin/.docker -R
+sudo chmod g+rwx /home/admin/.docker -R
+sudo systemctl start docker.service
+sudo systemctl start containerd.service
 sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
 echo "----------------------------------------------------------------"
-echo "Starting Docker services..."
-sudo systemctl start docker.service
-sudo systemctl start containerd.service
+echo "Completed"
 echo "----------------------------------------------------------------"
-echo "Verifying Docker service status..."
 echo "----------------------------------------------------------------"
-sudo systemctl status docker.service --no-pager
-if sudo systemctl is-active --quiet docker; then
-    echo "Docker is running successfully."
-else
-    echo "Docker is not running. Please check the logs."
-    exit 1
-fi
+echo "Samba"
 echo "----------------------------------------------------------------"
-echo "Docker Setup Completed"
-echo "----------------------------------------------------------------"
-echo " "
-echo " "
-echo " "
-# Samba setup
-echo "----------------------------------------------------------------"
-echo "Commence Samba Setup"
-echo "----------------------------------------------------------------"
-echo "Installing Samba..."
-sudo apt-get update -y >/dev/null 2>&1
-sudo apt-get install -y samba >/dev/null 2>&1
-echo "Stopping Samba service..."
+sudo apt install samba -y
 sudo systemctl stop samba
-echo "Backup smb.conf"
 sudo mv /etc/samba/smb.conf /etc/samba/smb.conf.1
 sudo wget -O /etc/samba/smb.conf https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/smb.conf
-echo "Setting correct permissions for smb.conf..."
 sudo chmod 644 /etc/samba/smb.conf
 sudo chown root:root /etc/samba/smb.conf
-echo "Starting Samba service..."
 sudo systemctl start samba
-echo "Setting Samba password for user 'admin'..."
 if ! command -v expect &> /dev/null
 then
     echo "Expect is not installed, installing..."
@@ -108,33 +47,15 @@ spawn sudo smbpasswd -a admin
 expect "New SMB password:"
 send "admin\r"
 expect "Retype new SMB password:"
-send "admin\r"
+send "qwer1234\r"
 expect eof
 EOF
-echo "Restarting Samba service..."
 sudo systemctl restart samba
 echo "----------------------------------------------------------------"
-echo "Samba configuration is complete. SMB user 'admin' has been created with the password 'admin'."
+echo "Completed"
 echo "----------------------------------------------------------------"
-echo " "
-echo " "
-echo " "
+echo "SSH"
 echo "----------------------------------------------------------------"
-echo "Commence Glances Setup"
-echo "----------------------------------------------------------------"
-sudo apt-get install glances -y >/dev/null 2>&1
-sudo systemctl enable glances
-sudo systemctl start glances
-echo "----------------------------------------------------------------"
-echo "Glances setting completed and host at http://localhost:61208"
-echo "----------------------------------------------------------------"
-echo " "
-echo " "
-echo " "
-echo "----------------------------------------------------------------"
-echo "Commence root-ssh account setting"
-echo "----------------------------------------------------------------"
-echo "Setting password for root..."
 if ! command -v expect &> /dev/null
 then
     echo "Expect is not installed, installing..."
@@ -149,126 +70,180 @@ expect "Retype new password:"
 send "admin\r"
 expect eof
 EOF
-echo "Stopping ssh service..."
 sudo systemctl stop ssh
-echo "Backing up original sshd_config..."
 sudo mv /etc/ssh/sshd_config /etc/ssh/sshd_config.1
-echo "Downloading new smb.conf..."
 sudo wget -O /etc/ssh/sshd_config https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/sshd_config
-echo "Setting correct permissions for sshd_config..."
 sudo chmod 644 /etc/ssh/sshd_config
 sudo chown root:root /etc/ssh/sshd_config
-echo "Starting ssh service..."
 sudo systemctl start ssh
 echo "----------------------------------------------------------------"
-echo "root-ssh setup completed"
+echo "Completed"
 echo "----------------------------------------------------------------"
-echo " "
-echo " "
-echo " "
+echo "Plex"
 echo "----------------------------------------------------------------"
-echo "Commence docker-run"
+sudo apt install apt-transport-https -y
+curl https://downloads.plex.tv/plex-keys/PlexSign.key | gpg --dearmor | sudo tee /usr/share/keyrings/plex-archive-keyring.gpg >/dev/null
+echo deb [signed-by=/usr/share/keyrings/plex-archive-keyring.gpg] https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list
+sudo apt update
+sudo apt install plexmediaserver -y
 echo "----------------------------------------------------------------"
-echo "install portainer in docker"
-sudo docker run -d --name portainer -p 9000:9000 --restart always -v /var/run/docker.sock:/var/run/docker.sock -v /opt/docker/portaimer:/data portainer/portainer-ce:latest
+echo "Completed"
 echo "----------------------------------------------------------------"
-echo "portainer installed and running at http://pi.local:9000"
+echo "Prowlarr"
 echo "----------------------------------------------------------------"
+sudo apt install curl sqlite3 -y
+wget --content-disposition 'http://prowlarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=arm64'
+tar -xvzf Prowlarr*.linux*.tar.gz
+sudo mv Prowlarr/ /etc
+sudo chown $USER:$USER -R /etc/Prowlarr
+cat << EOF | sudo tee /etc/systemd/system/prowlarr.service > /dev/null
+[Unit]
+Description=Prowlarr Daemon
+After=syslog.target network.target
+
+[Service]
+Type=simple
+ExecStart=/etc/Prowlarr/Prowlarr -nobrowser -data=/var/lib/prowlarr/
+TimeoutStopSec=20
+KillMode=process
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo systemctl -q daemon-reload
+sudo systemctl enable --now -q prowlarr
+rm Prowlarr*.linux*.tar.gz
 echo "----------------------------------------------------------------"
-echo "install radarr in docker"
-sudo docker run -d --name radarr -e 'PUID=1000' -e 'PGID=1000' -e 'TZ=Asia/Kuala_Lumpur' -e 'UMASK=022' -p '7878:7878' -v '/opt/docker/radarr:/config' -v '/dev/sda1:/media' -v '/media/downloads:/downloads' --restart 'unless-stoped' lscr.io/linuxserver/radarr:latest
+echo "Completed"
 echo "----------------------------------------------------------------"
-echo "radarr installed and running at http://pi.local:7878"
+echo "qbittorrent"
 echo "----------------------------------------------------------------"
+sudo apt install qbittorrent-nox -y
+sudo mv /etc/systemd/system/qbittorrent.service /etc/systemd/system/qbittorrent.service.backup
+cat << EOF | sudo tee /etc/systemd/system/qbittorrent.service > /dev/null
+[Unit]
+Description=qBittorrent
+After=network.target
+
+[Service]
+Type=forking
+UMask=022
+ExecStart=/usr/bin/qbittorrent-nox -d --webui-port=8081
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo systemctl start qbittorrent
+sudo systemctl enable qbittorrent
 echo "----------------------------------------------------------------"
-echo "install sonarr in docker"
-sudo docker run -d --name sonarr -e 'PUID=1000' -e 'PGID=1000' -e 'TZ=Asia/Kuala_Lumpur' -e 'UMASK=022' -p '8989:8989' -v '/opt/docker/sonarr:/config' -v '/dev/sda1/media' -v '/media/downloads:/downloads' --restart 'unless-stopped' lscr.io/linuxserver/sonarr:latest
+echo "Completed"
 echo "----------------------------------------------------------------"
-echo "sonarr installed and running at http://pi.local:8989"
+echo "Transmission"
 echo "----------------------------------------------------------------"
+sudo apt install transmission-daemon -y
+sudo systemctl stop transmission-daemon
+sudo mkdir -p /home/admin/.transmission/process
+sudo chown -R admin:admin /home/admin/.transmission/process
+sudo usermod -a -G debian-transmission admin
+chgrp debian-transmission /home/admin/.transmission/progress
+chgrp debian-transmission /home/admin/Downloads
+chmod 770 /home/admin/.transmission/progress
+chmod 770 /home/admin/Downloads
+sudo mv /etc/transmission-daemon/settings.json /etc/transmission-daemon/settings.json.backup
+sudo wget -O /etc/transmission-daemon/settings.json https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/transmission/settings.json
+sudo chmod 777 /etc/transmission-daemon/settings.json && sudo chown root:root /etc/transmission-daemon/settings.json
+sudo service transmission-daemon reload
+sudo systemctl start transmission-daemon
+sudo ststemctl enable transmission-daemon
 echo "----------------------------------------------------------------"
-echo "install prowlarr in docker"
-sudo docker run -d --name prowlarr -e 'PUID=1000' -e 'PGID=1000' -e 'TZ=Asia/Kuala_Lumpur' -p '9696:9696' -v '/opt/docker/prowlarr:/config' --restart 'unless-stopped' lscr.io/linuxserver/prowlarr:latest
+echo "Completed"
 echo "----------------------------------------------------------------"
-echo "prowlarr installed and running at http://pi.local:9696"
+echo "aria2"
 echo "----------------------------------------------------------------"
+sudo apt-get install aria2 -y
+sudo mkdir /etc/aria2
+cat << EOF | sudo tee /etc/aria2/aria2.conf > /dev/null
+dir=/home/admin/Downloads
+max-concurrent-downloads=6
+continue=true
+quiet=true
+allow-overwrite=true
+allow-piece-length-change=true
+disk-cache=64M
+file-allocation=falloc
+no-file-allocation-limit=8M
+enable-rpc=true
+pause=true
+rpc-allow-origin-all=true
+rpc-listen-all=true
+rpc-listen-port=6800
+rpc-secret=qwer1234
+max-connection-per-server=16
+min-split-size=8M
+split=32
+max-overall-upload-limit=256K
+max-upload-limit=64K
+seed-ratio=0.1
+seed-time=0
+EOF
+cat << EOF | sudo tee /etc/systemd/system/aria2.services > /dev/null
+[Unit]
+Description=Aria2
+Requires=network.target
+After=dhcpcd.service
+
+[Service]
+ExecStart=/usr/bin/aria2c --conf-path=/etc/aria2/aria2.conf
+
+[Install]
+WantedBy=default.target
+EOF
+sudo systemctl start aria2
+sudo systemctl enable aria2
 echo "----------------------------------------------------------------"
-echo " install flaresolverr in docker"
+echo "Completed"
+echo "----------------------------------------------------------------"
+echo "aria2-webui"
+echo "----------------------------------------------------------------"
+sudo mkdir -p /etc/aria2-webui
+sudo git clone https://github.com/ziahamza/webui-aria2.git /etc/aria2-webui && cd /etc/aria2-webui
+sudo apt-get install npm -y
+sudo npm install -g pm2
+pm2 start node-server.js
+pm2 startup
+sudo env PATH=$PATH:/usr/bin /usr/local/lib/node_modules/pm2/bin/pm2 startup systemd -u admin --hp /home/admin
+pm2 save
+echo "----------------------------------------------------------------"
+echo "Completed"
+echo "----------------------------------------------------------------"
+echo "Portainer"
+echo "----------------------------------------------------------------"
+sudo docker run -d --name portainer -p 9000:9000 --restart always -v /var/run/docker.sock:/var/run/docker.sock -v /etc/portainer:/data portainer/portainer-ce:latest
+echo "----------------------------------------------------------------"
+echo "Completed"
+echo "----------------------------------------------------------------"
+echo "Flaresolverr"
+echo "----------------------------------------------------------------"
 sudo docker run -d --name flaresolverr -p '8191:8191' -e LOG_LEVEL=info --restart 'unless-stopped' ghcr.io/flaresolverr/flaresolverr:latest
 echo "----------------------------------------------------------------"
-echo "flaresolverr installed"
+echo "Completed"
 echo "----------------------------------------------------------------"
+echo "Alist"
 echo "----------------------------------------------------------------"
-echo "install aria2 in docker"
-sudo docker run -d --name aria2 --restart 'unless-stopped' --log-opt max-size=1m -e PUID=1000 -e PGID=1000 -e UMASK_SET=022 -e 'TZ=Asia/Kuala_Lumpur' -e RPC_SECRET=qwer1234 -e RPC_PORT=6800 -p 6800:6800 -e LISTEN_PORT=6888 -p 6888:6888 -p 6888:6888/udp -v '/opt/docker/aria2:/config' -v '/media/dowmloads:/downloads' p3terx/aria2-pro:latest
-sudo docker run -d --name ariang --log-opt max-size=1m --restart 'unless-stopped' -p '6880:6880' 
+sudo docker run -d --name alist --restart always -v '/etc/alist:/opt/alist/data' -v '/etc/alist/data:/data' -p '5244:5244' -e 'PUID=1000' -e 'PGID=1000' -e 'TZ=Asia/Kuala_Lumpur' -e 'UMASK=022' xhofe/alist:latest
+sudo docker exec -it alist ./alist admin set qwer1234
 echo "----------------------------------------------------------------"
-echo "aria2 installed and running with webui in http://pi.local:6880 with rpc_secret='qwer1234'."
+echo "Completed"
 echo "----------------------------------------------------------------"
+echo "portainer; http://pi.local:9000"
+echo "prowlarr; http://pi.local:9696"
+echo "aria2; http://pi.local:8888; rpc_secret=qwer1234"
+echo "transmission; http://pi.local:9091 with id admin and password qwer1234"
+echo "qbittorent; http://pi.local:8081"
+echo "alist; http://pi.local:5244 with id admin and password qwer1234"
+echo "plex media server; http://pi.local:32400/web"
 echo "----------------------------------------------------------------"
-echo "install transmission in docker"
-sudo docker run -d --name transmission -e 'PUID=1000' -e 'PGID=1000' -e 'TZ=Asia/Kuala_Lumpur' -e 'USER=admin' -e 'PASS=admin' -e 'TZ=Asia/Kuala_Lumpur' -p '9091:9091' -p '51413:51413' -p '51413:51413/udp' -v '/opt/docker/transmission:/config' -v '/media/downloads:/downloads' --restart 'unless-stopped' lscr.io/linuxserver/transmission:latest
+echo "please perform a reboot"
 echo "----------------------------------------------------------------"
-echo "transmission installed and running in http://pi.local:9091 with id admin and password admin"
-echo "----------------------------------------------------------------"
-echo "----------------------------------------------------------------"
-echo "install qbittorrent in docker"
-sudo docker run -d --name qbittorrent -e 'PUID=1000' -e 'PGID=1000' -e 'TZ=Asia/Kuala_Lumpur' -e 'UMASK=022' -e 'WEBUI_PORT=8080' -e 'TORRENTING_PORT=6881' -p '8080:8080' -p '6881:6881' -p '6881:6881/udp' -v '/opt/docker/qbittorrent:/config' -v '/media/downloads:/downloads' --restart 'unless-stopped' lscr.io/linuxserver/qbittorrent:latest
-echo "----------------------------------------------------------------"
-echo "qbittorent installed and running in http://pi.local:8080"
-echo "----------------------------------------------------------------"
-echo "----------------------------------------------------------------"
-echo "install alist in docker"
-sudo docker run -d --name alist --restart always -v '/opt/docker/alist:/opt/alist/data' -v '/opt/docker/alist/data:/data' -p '5244:5244' -e 'PUID=1000' -e 'PGID=1000' -e 'TZ=Asia/Kuala_Lumpur' -e 'UMASK=022' xhofe/alist:latest
-echo "setting password for user admin"
-sudo docker exec -it alist ./alist admin set admin
-echo "----------------------------------------------------------------"
-echo "alist installed and running in http://pi.local:5244 with id admin and password admin"
-echo "----------------------------------------------------------------"
-echo "----------------------------------------------------------------"
-echo "install plex media server in docker"
-sudo docker run -d --name plex --restart 'unless-stopped' --net host -e 'PUID=1000' -e 'PGID=1000' -e 'TZ=Asia/Kuala_Lumpur' -e 'UMASK=022' -e 'VERSION=docker' -v '/opt/docker/plex:/config' -v '/dev/sda1:/media/drive1' -v '/dev/sdb1:/media/drive2' -v '/media:/media/local' lscr.io/linuxserver/plex:latest
-echo "----------------------------------------------------------------"
-echo "plex media server installed and running in http://pi.local:32400/web"
-echo "----------------------------------------------------------------"
-echo "----------------------------------------------------------------"
-echo "install emby_media_server in docker"
-sudo docker run -d --name emby --net host -e 'PUID=1000' -e 'PGID=1000' -e 'TZ=Asia/Kuala_Lumpur' -e 'UMASK=022' -v /opt/docker/emby:/config -v '/media:/media/local' -v '/dev/sda1:/media/drive1' -v '/dev/sdb1:/media/drive2' --restart unless-stopped lscr.io/linuxserver/emby:arm64v8-latest
-echo "----------------------------------------------------------------"
-echo "emby media server installed and running in http://pi.local:8096"
-echo "----------------------------------------------------------------"
-echo "----------------------------------------------------------------"
-echo "install watchtower in docker"
-sudo docker run -d --name watchtower -v '/var/run/docker.sock:/var/run/docker.sock' containrrr/watchtower:latest
-echo "----------------------------------------------------------------"
-echo "watchtower installed"
-echo "----------------------------------------------------------------"
-echo "----------------------------------------------------------------"
-echo "Docker Application install completed"
-echo "portainer installed and running at http://pi.local:9000"
-echo "radarr installed and running at http://pi.local:7878"
-echo "sonarr installed and running at http://pi.local:8989"
-echo "prowlarr installed and running at http://pi.local:9696"
-echo "aria2 installed and running with webui at http://pi.local:6880 with rpc_secret='qwer1234'"
-echo "transmission installed and running in http://pi.local:9091 with id admin and password admin"
-echo "qbittorent installed and running in http://pi.local:8080"
-echo "alist installed and running in http://pi.local:5244 with id admin and password admin"
-echo "plex media server installed and running in http://pi.local:32400/web"
-echo "emby media server installed and running in http://pi.local:8096"
-echo "----------------------------------------------------------------"
-echo " "
-echo " "
-echo " "
-echo "Installation completed"
-echo "----------------------------------------------------------------"
-echo "The system needs to reboot to complete the setup."
-echo "----------------------------------------------------------------"
-read -p "Do you want to reboot now? (y/n): " response
-
-# Check if the response is 'y' or 'Y'
-if [[ "$response" =~ ^[Yy]$ ]]; then
-    echo "Rebooting the system..."
-    sudo reboot
-else
-    echo "Reboot canceled. You can reboot later manually."
-fi
