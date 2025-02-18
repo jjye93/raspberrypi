@@ -1,5 +1,16 @@
 #!/usr/bin/bash
 echo "----------------------------------------------------------------"
+echo "Portainer"
+echo "----------------------------------------------------------------"
+sudo docker run -d --name portainer -p 9000:9000 --restart always -v /var/run/docker.sock:/var/run/docker.sock -v /etc/portainer:/data portainer/portainer-ce:latest
+echo "----------------------------------------------------------------"
+echo "Completed"
+echo "----------------------------------------------------------------"
+echo "Flaresolverr"
+echo "----------------------------------------------------------------"
+sudo docker run -d --name flaresolverr -p '8191:8191' -e LOG_LEVEL=info --restart 'unless-stopped' ghcr.io/flaresolverr/flaresolverr:latest
+echo "----------------------------------------------------------------"
+echo "Completed"echo "----------------------------------------------------------------"
 echo "Alist"
 echo "----------------------------------------------------------------"
 sudo docker run -d --name alist --restart always -v '/etc/alist:/opt/alist/data' -v '/etc/alist/data:/data' -p '5244:5244' -p '5245:5245' -e 'PUID=1000' -e 'PGID=1000' -e 'TZ=Asia/Kuala_Lumpur' -e 'UMASK=022' xhofe/alist:latest
