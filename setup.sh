@@ -32,7 +32,7 @@ echo "----------------------------------------------------------------"
 sudo apt install samba -y
 sudo systemctl stop samba
 sudo mv /etc/samba/smb.conf /etc/samba/smb.conf.1
-sudo wget -O /etc/samba/smb.conf https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/smb.conf
+sudo wget -O /etc/samba/smb.conf https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/samba/smb.conf
 sudo chmod 644 /etc/samba/smb.conf
 sudo chown root:root /etc/samba/smb.conf
 sudo systemctl start samba
@@ -45,7 +45,7 @@ fi
 expect <<EOF
 spawn sudo smbpasswd -a admin
 expect "New SMB password:"
-send "admin\r"
+send "qwer1234\r"
 expect "Retype new SMB password:"
 send "qwer1234\r"
 expect eof
@@ -72,7 +72,7 @@ expect eof
 EOF
 sudo systemctl stop ssh
 sudo mv /etc/ssh/sshd_config /etc/ssh/sshd_config.1
-sudo wget -O /etc/ssh/sshd_config https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/sshd_config
+sudo wget -O /etc/ssh/sshd_config https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/ssh/sshd_config
 sudo chmod 644 /etc/ssh/sshd_config
 sudo chown root:root /etc/ssh/sshd_config
 sudo systemctl start ssh
@@ -120,7 +120,6 @@ echo "----------------------------------------------------------------"
 echo "qbittorrent"
 echo "----------------------------------------------------------------"
 sudo apt install qbittorrent-nox -y
-sudo mv /etc/systemd/system/qbittorrent.service /etc/systemd/system/qbittorrent.service.backup
 cat << EOF | sudo tee /etc/systemd/system/qbittorrent.service > /dev/null
 [Unit]
 Description=qBittorrent
