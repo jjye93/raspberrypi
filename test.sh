@@ -36,12 +36,12 @@ Qbittorrent() {
 Transmission() {
 		echo "Installing Transmission..."
 		curl https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/qbittorrent/install.sh |sudo bash
-		echo "access Transmission at http://host:9091; username: admin; password: adminadmin
+		echo "access Transmission at http://host:9091; username: admin; password: adminadmin"
 		echo "Transmission installation completed!"
 		pause_and_return
 }
 
-PS3:"Select for installation: "
+PS3="Select for installation: "
 options=("Portainer" "Aria2-webui" "Qbittorrent" "Transmission" "Quit")
 
 while true; do
@@ -52,7 +52,7 @@ while true; do
 						3) Qbittorrent ;;
 						4) Transmission ;;
 						5) echo "Exiting..."; break ;;
-						*) echo "Invalid."; exit 0 ;;
+						*) echo "Invalid. Please try again." ;;
 				esac
 		done
 done
