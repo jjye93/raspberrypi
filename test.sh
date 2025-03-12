@@ -52,7 +52,7 @@ while true; do
 						3) Qbittorrent ;;
 						4) Transmission ;;
 						5) echo "Exiting..."; break ;;
-						*) echo "Invalid options. Please try again." ;;
+						*) echo "Invalid."; exit 0 ;;
 				esac
 		done
 done
