@@ -2,7 +2,7 @@
 
 pause_and_return() {
 		echo "Continue or Quit?"
-		select "Continue" "Quit"; do
+		select next_step in "Continue" "Quit"; do
 				case $REPLY in
 						1) break ;;
 						2) echo "Exiting..."; exit 0 ;;
