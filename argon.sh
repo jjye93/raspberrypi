@@ -31,8 +31,8 @@ while true; do
             1) Argon-Neo ;;
             2) Argon-One-V3 ;;
             3) Argon-One-V5 ;;
-            4) echo "Exiting..."; break ;;
-            *) echo "Invalid"; break ;;
+            4) echo "Exiting..."; exit 0 ;;
+            *) echo "Invalid"; exit 0 ;;
         esac
     done
 done
