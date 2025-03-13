@@ -16,9 +16,9 @@ fi
 expect <<EOF
 spawn sudo smbpasswd -a admin
 expect "New SMB password:"
-send "admin\r"
+send "qwer1234\r"
 expect "Retype new SMB password:"
-send "admin\r"
+send "qwer1234\r"
 expect eof
 EOF
 sudo systemctl restart samba
