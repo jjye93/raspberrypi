@@ -1,7 +1,6 @@
 #!/usr/bin/bash
-echo "Samba"
+
 sudo apt-get install -y samba 
-echo "Stopping Samba service..."
 sudo systemctl stop samba 
 sudo mv /etc/samba/smb.conf /etc/samba/smb.conf.1 
 sudo wget -O /etc/samba/smb.conf https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/samba/smb.conf
@@ -23,4 +22,3 @@ send "admin\r"
 expect eof
 EOF
 sudo systemctl restart samba
-echo "Complete with admin:admin"
