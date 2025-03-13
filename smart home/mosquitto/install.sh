@@ -14,6 +14,6 @@ sudo systemctl stop mosquitto
 sudo mv /etc/mosquitto/mosquitto.conf /etc/mosquitto/mosquitto.conf.1
 sudo wget -o /etc/mosquitto/mosquitto.conf https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/smart%20home/mosquitto/mosquitto.conf
 sudo chmod 777 /etc/mosquitto/mosquitto.conf
-sudo systemctl start mosquitto.conf
-sudo systemctl enable mosquitto.conf
+sudo systemctl start mosquitto
+sudo systemctl enable mosquitto
 echo "complete"
