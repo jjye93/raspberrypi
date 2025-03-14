@@ -33,7 +33,7 @@ Docker() {
     sudo systemctl enable containerd.service
     echo "Completed"
     pause_and_return
-)
+}
 
 Samba() {
     echo "Install and Configure Samba"
@@ -86,6 +86,7 @@ aria2() {
     echo "Completed"
     pause_and_return
 }
+
 PS3=(Select your package: "
 options=("Update&Upgrade" "Docker" "Samba" "SSH" "Plex" "Prowlarr" "Qbittorrent" "Transmission" "Aria2" "Exit")
 
