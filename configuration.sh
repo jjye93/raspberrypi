@@ -9,7 +9,7 @@ pause_and_return() {
         case $REPLY in
             1) return ;;
             2) echo "Exiting..."; exit 0;;
-            *) echo "Invalid..."; exit 0;;
+            *) echo "Invalid..." ;;
         esac
     done
 }
@@ -103,7 +103,8 @@ while true; do
             8) transmission ;;
             9) aria2 ;;
             10) echo "Exiting..."; exit 0 ;;
-            *) echo "Invalid"; exit 0 ;;
+            *) echo "Invalid" ;;
         esac
+        break
     done
 done
