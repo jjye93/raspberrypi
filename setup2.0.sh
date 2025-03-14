@@ -51,8 +51,43 @@ SSH() {
     pause_and_return
 }
 
+Plex() {
+    echo "Installing Plex"
+    bash -c "curl -fsSL https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/plex/install.sh)"
+    echo "Completed"
+    pause_and_return
+}
+
+Prowlarr() {
+    echo "Installing Prowlarr"
+    bash -c "curl -fsSL https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/prowlarr/install.sh)"
+    echo "Completed"
+    pause_and_return
+}
+
+qbittorrent() {
+    echo "Installing qbittorrent"
+    bash -c "curl -fsSL https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/qbittorrent/install.sh"
+    echo "Completed"
+    pause_and_return
+}
+
+transmission() {
+    echo "Installing transmission"
+    bash -c "curl -fsSL https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/transmission/install2.sh"
+    echo "Completed"
+    pause_and_return
+}
+
+aria2() {
+    echo "Installing aria2-webui"
+    bash -c "curl -fsSL https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/aria2/install.sh"
+    echo "aria2-webui hosting on port :8888 with rpc-secret "qwer1234"
+    echo "Completed"
+    pause_and_return
+}
 PS3=(Select your package: "
-options=("Update&Upgrade" "Docker" "Samba" "SSH" "Plex"
+options=("Update&Upgrade" "Docker" "Samba" "SSH" "Plex" "Prowlarr" "Qbittorrent" "Transmission" "Aria2" "Exit")
 
 while true; do
     select choice in "${options[@]}"; do
@@ -61,7 +96,12 @@ while true; do
             2) Docker ;;
             3) Samba ;;
             4) SSH ;;
-            4) echo "Exiting..."; exit 0 ;;
+            5) Plex ;;
+            6) Prowlarr ;;
+            7) qbittorrent ;;
+            8) transmission ;;
+            9) aria2 ;;
+            10) echo "Exiting..."; exit 0 ;;
             *) echo "Invalid"; exit 0 ;;
         esac
     done
