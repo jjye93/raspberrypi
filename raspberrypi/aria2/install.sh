@@ -1,7 +1,8 @@
 #!/usr/bin/bash
 sudo apt-get install aria2 -y
+sudo git clone https://github.com/ziahamza/webui-aria2.git /etc/aria2-webui
 sudo mkdir -p /etc/aria2-webui/aria2
-sudo git clone https://github.com/ziahamza/webui-aria2.git /etc/aria2-webui && cd /etc/aria2-webui
+cd /etc/aria2-webui
 cat << EOF | sudo tee /etc/aria2-webui/aria2/aria2.conf > /dev/null
 dir=/home/admin/Downloads
 max-concurrent-downloads=6
