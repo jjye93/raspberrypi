@@ -2,7 +2,7 @@
 sudo apt-get install aria2 -y
 sudo mkdir -p /etc/aria2-webui/aria2
 sudo git clone https://github.com/ziahamza/webui-aria2.git /etc/aria2-webui && cd /etc/aria2-webui
-cat << EOF | sudo tee /etc/aria2/aria2.conf > /dev/null
+cat << EOF | sudo tee /etc/aria2-webui/aria2/aria2.conf > /dev/null
 dir=/home/admin/Downloads
 max-concurrent-downloads=6
 continue=true
@@ -34,7 +34,7 @@ Requires=network.target
 After=dhcpcd.service
 
 [Service]
-ExecStart=/usr/bin/aria2c --conf-path=/etc/aria2/aria2.conf
+ExecStart=/usr/bin/aria2c --conf-path=/etc/aria2-webui/aria2/aria2.conf
 
 [Install]
 WantedBy=default.target
