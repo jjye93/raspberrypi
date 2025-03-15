@@ -10,7 +10,7 @@ services:
       - PASS= 'qwer1234'
     volumes:
       - ./data:/config
-      - /home/admin/downloads:/downloads
+      - /home/admin/Downloads:/downloads
     ports:
       - 9091:9091
       - 51413:51413
