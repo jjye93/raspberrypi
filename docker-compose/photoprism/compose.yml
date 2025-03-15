@@ -68,8 +68,8 @@ services:
       PHOTOPRISM_UMASK: 022
     working_dir: "/photoprism" # do not change or remove
     volumes:
-      - "~/Pictures:/photoprism/originals"               # Original media files (DO NOT REMOVE)
-      - "~/pictures:/photoprism/import"                  # *Optional* base folder from which files can be imported to originals
+      - "~/Pictures/originals:/photoprism/originals"               # Original media files (DO NOT REMOVE)
+      - "~/Pictures/import:/photoprism/import"                  # *Optional* base folder from which files can be imported to originals
       - "./storage:/photoprism/storage"                  # *Writable* storage folder for cache, database, and sidecar files (DO NOT REMOVE)
 
   mariadb:
