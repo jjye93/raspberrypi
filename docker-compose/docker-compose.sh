@@ -62,8 +62,28 @@ qbittorrent() {
     pause_and_return    
 }
 
+alist() {
+    echo "Install alist"
+    sudo mkdir -p ~/Docker/alist
+    sudo wget -O ~/Docker/alist/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/alist/compose.yml
+    cd ~/Docker/alist/
+    docker compose up -d
+    echo "completed"
+    pause_and_return    
+}
+
+homeassistant() {
+    echo "Install homeassistant"
+    sudo mkdir -p ~/Docker/homeassistant
+    sudo wget -O ~/Docker/homeassistant/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/homeassistant/compose.yml
+    cd ~/Docker/homeassistant/
+    docker compose up -d
+    echo "completed"
+    pause_and_return    
+}
+
 PS3="Select application to run: "
-options=("Docker" "FlareSolverr" "PhotoPrism" "Portainer" "qBittorrent" "Exit")
+options=("Docker" "FlareSolverr" "PhotoPrism" "Portainer" "qBittorrent" "alist" "homeassistant" "Exit")
 
 while true; do
     select choice in "${options[@]}"; do
@@ -73,7 +93,9 @@ while true; do
             3) photoprism ;;
             4) portainer ;;
             5) qbittorrent ;;
-            6) echo "Exiting..."; exit 0 ;;
+            6) alist ;;
+            7) homeassistant ;;
+            8) echo "Exiting..."; exit 0 ;;
             *) echo "Invalid selection. Try again." ;;
         esac
         break
