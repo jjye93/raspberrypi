@@ -23,30 +23,14 @@ Update_Upgrade() {
 
 Docker() {
     echo "Installing Docker"
-    for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get remove $pkg; done
-    sudo apt-get update
-    sudo apt-get install ca-certificates curl
-    sudo install -m 0755 -d /etc/apt/keyrings
-    sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
-    sudo chmod a+r /etc/apt/keyrings/docker.asc
-    echo \
-      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
-      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo apt-get update
-    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-    sudo groupadd docker
-    sudo usermod -aG docker $USER
-    newgrp docker
-    sudo systemctl enable docker.service
-    sudo systemctl enable containerd.service
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/install-script/docker/install.sh)"
     echo "Completed"
     pause_and_return
 }
 
 Samba() {
     echo "Installing and Configuring Samba"
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/samba/install.sh)"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/install-script/samba/install.sh)"
     echo "Set username as 'admin' and password as 'qwer1234'"
     echo "Installation Completed"
     pause_and_return
@@ -54,7 +38,7 @@ Samba() {
 
 SSH() {
     echo "Configuring SSH for root user"
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/ssh/install.sh)"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/install-script/ssh/install.sh)"
     echo "Set username as 'root' and password as 'qwer1234'"
     echo "Completed"
     pause_and_return
@@ -62,42 +46,62 @@ SSH() {
 
 Plex() {
     echo "Installing Plex"
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/plex/install.sh)"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/install-script/plex/install.sh)"
     echo "Completed"
     pause_and_return
 }
 
 Prowlarr() {
     echo "Installing Prowlarr"
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/prowlarr/install.sh)"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/install-script/prowlarr/install.sh)"
     echo "Completed"
     pause_and_return
 }
 
 qbittorrent() {
     echo "Installing qbittorrent"
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/qbittorrent/install.sh)"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/install-script/qbittorrent/install.sh)"
     echo "Completed"
     pause_and_return
 }
 
 transmission() {
     echo "Installing transmission"
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/transmission/install2.sh)"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/install-script/transmission/install.sh)"
     echo "Completed"
     pause_and_return
 }
 
 aria2() {
     echo "Installing aria2-webui"
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/aria2/install.sh)"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/install-script/aria2/install.sh)"
     echo "aria2-webui hosting on port :8888 with rpc-secret 'qwer1234'"
     echo "Completed"
     pause_and_return
 }
 
+casaos() {
+    echo "Installing casaos"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/install-script/casaos/install.sh)"
+    echo "Completed"
+    pause_and_return
+}
+
+homebridge() {
+    echo "Installing homebridge"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/install-script/homebridge/install.sh)"
+    echo "Completed"
+    pause_and_return
+}
+
+zigbee2mqtt() {
+    echo "Installing zigbee2mqtt"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/install-script/zigbee2mqtt/install.sh)"
+    echo "Completed"
+    pause_and_return
+}
 PS3="Select your package: "
-options=("Update & Upgrade" "Docker" "Samba" "SSH" "Plex" "Prowlarr" "Qbittorrent" "Transmission" "Aria2" "Exit")
+options=("Update & Upgrade" "Docker" "Samba" "SSH" "Plex" "Prowlarr" "Qbittorrent" "Transmission" "Aria2" "CasaOS" "Homebridge" "zigbee2MQTT" "Exit")
 
 while true; do
     select choice in "${options[@]}"; do
@@ -111,7 +115,10 @@ while true; do
             7) qbittorrent ;;
             8) transmission ;;
             9) aria2 ;;
-            10) echo "Exiting..."; exit 0 ;;
+            10) casaos ;;
+            11) homebridge ;;
+            12) zigbee2mqtt ;;
+            13) echo "Exiting..."; exit 0 ;;
             *) echo "Invalid selection. Try again." ;;
         esac
         break  # Exit select to redisplay the menu
