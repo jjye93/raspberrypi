@@ -5,12 +5,11 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Asdia/Kuala_Lumpuir
-      - WEBUI_PORT=8081
+      - TZ=Asdia/Kuala_Lumpur
       - TORRENTING_PORT=6881
     volumes:
       - ./config/:/config
-      - /home/admin/Download:/downloads #optional
+      - /home/admin/Download:/downloads
     ports:
       - 8080:8080
       - 6881:6881
