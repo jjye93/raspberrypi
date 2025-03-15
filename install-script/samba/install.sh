@@ -3,7 +3,7 @@
 sudo apt-get install -y samba 
 sudo systemctl stop samba 
 sudo mv /etc/samba/smb.conf /etc/samba/smb.conf.1 
-sudo wget -O /etc/samba/smb.conf https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/samba/smb.conf
+sudo wget -O /etc/samba/smb.conf https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/install-script/samba/smb.conf
 sudo chmod 644 /etc/samba/smb.conf
 sudo chown root:root /etc/samba/smb.conf
 sudo systemctl start samba 
