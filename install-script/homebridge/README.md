@@ -1,1 +1,1 @@
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/homebridge/install.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/install-script/homebridge/install.sh)"
