@@ -82,8 +82,18 @@ homeassistant() {
     pause_and_return    
 }
 
+autobangumi() {
+    echo "Install autobangumi"
+    sudo mkdir -p ~/Docker/autobangumi
+    sudo wget -O ~/Docker/autobangumi/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/autobangumi/compose.yml
+    cd ~/Docker/autobangumi/
+    docker compose up -d
+    echo "completed"
+    pause_and_return    
+}
+
 PS3="Select application to run: "
-options=("Docker" "FlareSolverr" "PhotoPrism" "Portainer" "qBittorrent" "alist" "homeassistant" "Exit")
+options=("Docker" "FlareSolverr" "PhotoPrism" "Portainer" "qBittorrent" "alist" "homeassistant" "autobangumi" "Exit")
 
 while true; do
     select choice in "${options[@]}"; do
@@ -95,7 +105,8 @@ while true; do
             5) qbittorrent ;;
             6) alist ;;
             7) homeassistant ;;
-            8) echo "Exiting..."; exit 0 ;;
+            8) autobangumi ;;
+            9) echo "Exiting..."; exit 0 ;;
             *) echo "Invalid selection. Try again." ;;
         esac
         break
