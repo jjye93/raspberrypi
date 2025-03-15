@@ -16,7 +16,7 @@ expect eof
 EOF
 sudo systemctl stop ssh
 sudo mv /etc/ssh/sshd_config /etc/ssh/sshd_config.1
-sudo wget -O /etc/ssh/sshd_config https://raw.githubusercontent.com/jjye93/config-file/refs/heads/main/raspberrypi/ssh/sshd_config
+sudo wget -O /etc/ssh/sshd_config https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/install-script/ssh/sshd_config
 sudo chmod 644 /etc/ssh/sshd_config 
 sudo systemctl start ssh
 echo "complete"
