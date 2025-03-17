@@ -92,13 +92,13 @@ while true; do
     select choice in "${options[@]}"; do
         case $REPLY in
             1) install_docker ;;
-            2) install_service "flaresolverr" "https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/flaresolverr/compose.yml" ;;
-            3) install_service "photoprism" "https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/photoprism/compose.yml" ;;
-            4) install_service "portainer" "https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/portainer/compose.yml" ;;
-            5) install_service "qbittorrent" "https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/qbittorrent/compose.yml" ;;
-            6) install_service "alist" "https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/alist/compose.yml" ;;
-            7) install_service "homeassistant" "https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/homeassistant/compose.yml" ;;
-            8) install_service "autobangumi" "https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/autobangumi/compose.yml" ;;
+            2) flaresolverr ;; 
+            3) photoprism ;;
+            4) portainer ;;
+            5) qbittorrent ;;
+            6) alist ;;
+            7) homeassistant ;;
+            8) autobangumi ;;
             9) echo "Exiting..."; exit 0 ;;
             *) echo "Invalid selection. Try again." ;;
         esac
