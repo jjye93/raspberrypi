@@ -2,7 +2,7 @@
 sudo apt install transmission-daemon -y
 sudo systemctl stop transmission-daemon
 sudo systemctl disable transmission-daemon
-sudo mkdir -p ~/Download/.transmission
+sudo mkdir -p ~/Downloads/.transmission
 sudo rm /etc/transmission-daemon/settings.json
 cat << EOF | sudo tee /etc/transmission-daemon/settings.json > /dev/null
 {
