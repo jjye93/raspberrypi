@@ -185,5 +185,5 @@ sudo mkdir -p /home/$USER/.config/transmission-daemon/
 sudo ln -s /etc/transmission-daemon/settings.json /home/$USER/.config/transmission-daemon/
 sudo chown -R $USER:$USER /home/$USER/.config/transmission-daemon/
 sudo systemctl start transmission-daemon
-sudo sysrtemctl enable transmission-daemon
+sudo systemctl enable transmission-daemon
 return ;;
