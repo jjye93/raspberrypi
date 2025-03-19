@@ -23,27 +23,27 @@ install_docker() {
 
 flaresolverr() {
     echo "Install Flaresolverr"
-    sudo mkdir -p ~/Docker/flaresolverr
-    sudo wget -O ~/Docker/flaresolverr/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/flaresolverr/compose.yml
-    sudo docker compose -f ~/Docker/flaresolverr/compose.yml up -d
+    sudo mkdir -p /etc/flaresolverr
+    sudo wget -O /etc/flaresolverr/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/flaresolverr/compose.yml
+    sudo docker compose -f /etc/flaresolverr/compose.yml up -d
     echo "completed"
     pause_and_return
 }
 
 photoprism() {
     echo "Install Photoprism"
-    sudo mkdir -p ~/Docker/photoprism
-    sudo wget -O ~/Docker/photoprism/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/photoprism/compose.yml
-    sudo docker compose -f ~/Docker/photoprism/compose.yml up -d
+    sudo mkdir -p /etc/photoprism
+    sudo wget -O /etc/photoprism/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/photoprism/compose.yml
+    sudo docker compose -f /etc/photoprism/compose.yml up -d
     echo "completed"
     pause_and_return
 }
 
 portainer() {
     echo "Install portainer"
-    sudo mkdir -p ~/Docker/portainer
-    sudo wget -O ~/Docker/portainer/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/portainer/compose.yml
-    sudo docker compose -f ~/Docker/portainer/compose.yml up -d
+    sudo mkdir -p /etc/portainer
+    sudo wget -O /etc/portainer/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/portainer/compose.yml
+    sudo docker compose -f /etc/portainer/compose.yml up -d
     echo "completed"
     pause_and_return
 
@@ -51,36 +51,36 @@ portainer() {
 
 qbittorrent() {
     echo "Install qbittorrent"
-    sudo mkdir -p ~/Docker/qbittorrent
-    sudo wget -O ~/Docker/qbittorrent/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/qbittorrent/compose.yml
-    sudo docker compose -f ~/Docker/qbittorrent/compose.yml up -d
+    sudo mkdir -p /etc/qbittorrent
+    sudo wget -O /etc/qbittorrent/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/qbittorrent/compose.yml
+    sudo docker compose -f /etc/qbittorrent/compose.yml up -d
     echo "completed"
     pause_and_return    
 }
 
 alist() {
     echo "Install alist"
-    sudo mkdir -p ~/Docker/alist
-    sudo wget -O ~/Docker/alist/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/alist/compose.yml
-    sudo docker compose -f ~/Docker/alist/compose.yml up -d
+    sudo mkdir -p /etc/alist
+    sudo wget -O /etc/alist/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/alist/compose.yml
+    sudo docker compose -f /etc/alist/compose.yml up -d
     echo "completed"
     pause_and_return    
 }
 
 homeassistant() {
     echo "Install homeassistant"
-    sudo mkdir -p ~/Docker/homeassistant
-    sudo wget -O ~/Docker/homeassistant/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/homeassistant/compose.yml
-    sudo docker compose -f ~/Docker/homeassistant/compose.yml up -d
+    sudo mkdir -p /etc/homeassistant
+    sudo wget -O /etc/homeassistant/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/homeassistant/compose.yml
+    sudo docker compose -f /etc/homeassistant/compose.yml up -d
     echo "completed"
     pause_and_return    
 }
 
 autobangumi() {
     echo "Install autobangumi"
-    sudo mkdir -p ~/Docker/autobangumi
-    sudo wget -O ~/Docker/autobangumi/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/autobangumi/compose.yml
-    sudo docker compose -f ~/Docker/autobangumi/compose.yml up -d
+    sudo mkdir -p /etc/autobangumi
+    sudo wget -O /etc/autobangumi/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/autobangumi/compose.yml
+    sudo docker compose -f /etc/autobangumi/compose.yml up -d
     echo "completed"
     pause_and_return    
 }
