@@ -100,8 +100,16 @@ zigbee2mqtt() {
     echo "Completed"
     pause_and_return
 }
+
+alist() {
+    echo "Installing Alist"
+    curl -fsSL "https://alist.nn.ci/v3-en.sh" -o v3-en.sh && bash v3-en.sh
+    echo "Completed"
+    pause_and_return
+}
+
 PS3="Select your package: "
-options=("Update & Upgrade" "Docker" "Samba" "SSH" "Plex" "Prowlarr" "Qbittorrent" "Transmission" "Aria2" "CasaOS" "Homebridge" "zigbee2MQTT" "Exit")
+options=("Update & Upgrade" "Docker" "Samba" "SSH" "Plex" "Prowlarr" "Qbittorrent" "Transmission" "Aria2" "CasaOS" "Homebridge" "zigbee2MQTT" "Alist" "Exit")
 
 while true; do
     select choice in "${options[@]}"; do
@@ -118,7 +126,8 @@ while true; do
             10) casaos ;;
             11) homebridge ;;
             12) zigbee2mqtt ;;
-            13) echo "Exiting..."; exit 0 ;;
+            13) alist ;;
+            14) echo "Exiting..."; exit 0 ;;
             *) echo "Invalid selection. Try again." ;;
         esac
         break  # Exit select to redisplay the menu
