@@ -108,8 +108,15 @@ alist() {
     pause_and_return
 }
 
+node-red() {
+    echo "Installing Node-Red"
+    bash <(curl -fsSL https://raw.githubusercontent.com/node-red/linux-installers/master/deb/update-nodejs-and-nodered)
+    echo "Completed"
+    pause_and_return
+}
+
 PS3="Select your package: "
-options=("Update & Upgrade" "Docker" "Samba" "SSH" "Plex" "Prowlarr" "Qbittorrent" "Transmission" "Aria2" "CasaOS" "Homebridge" "zigbee2MQTT" "Alist" "Exit")
+options=("Update & Upgrade" "Docker" "Samba" "SSH" "Plex" "Prowlarr" "Qbittorrent" "Transmission" "Aria2" "CasaOS" "Homebridge" "zigbee2MQTT" "Alist" "Node-Red" "Exit")
 
 while true; do
     select choice in "${options[@]}"; do
@@ -127,7 +134,8 @@ while true; do
             11) homebridge ;;
             12) zigbee2mqtt ;;
             13) alist ;;
-            14) echo "Exiting..."; exit 0 ;;
+            14) node-red ;;
+            15) echo "Exiting..."; exit 0 ;;
             *) echo "Invalid selection. Try again." ;;
         esac
         break  # Exit select to redisplay the menu
