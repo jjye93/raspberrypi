@@ -87,20 +87,6 @@ casaos() {
     pause_and_return
 }
 
-homebridge() {
-    echo "Installing homebridge"
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/install-script/homebridge/install.sh)"
-    echo "Completed"
-    pause_and_return
-}
-
-zigbee2mqtt() {
-    echo "Installing zigbee2mqtt"
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/install-script/zigbee2mqtt/install.sh)"
-    echo "Completed"
-    pause_and_return
-}
-
 alist() {
     echo "Installing Alist"
     curl -fsSL "https://alist.nn.ci/v3-en.sh" -o v3-en.sh && bash v3-en.sh
@@ -108,15 +94,9 @@ alist() {
     pause_and_return
 }
 
-node-red() {
-    echo "Installing Node-Red"
-    bash <(curl -fsSL https://raw.githubusercontent.com/node-red/linux-installers/master/deb/update-nodejs-and-nodered)
-    echo "Completed"
-    pause_and_return
-}
 
 PS3="Select your package: "
-options=("Update & Upgrade" "Docker" "Samba" "SSH" "Plex" "Prowlarr" "Qbittorrent" "Transmission" "Aria2" "CasaOS" "Homebridge" "zigbee2MQTT" "Alist" "Node-Red" "Exit")
+options=("Update & Upgrade" "Docker" "Samba" "SSH" "Plex" "Prowlarr" "Qbittorrent" "Transmission" "Aria2" "CasaOS" "Alist" "Exit")
 
 while true; do
     select choice in "${options[@]}"; do
@@ -131,11 +111,8 @@ while true; do
             8) transmission ;;
             9) aria2 ;;
             10) casaos ;;
-            11) homebridge ;;
-            12) zigbee2mqtt ;;
-            13) alist ;;
-            14) node-red ;;
-            15) echo "Exiting..."; exit 0 ;;
+            11) alist ;;
+            12) echo "Exiting..."; exit 0 ;;
             *) echo "Invalid selection. Try again." ;;
         esac
         break  # Exit select to redisplay the menu
