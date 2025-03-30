@@ -18,6 +18,7 @@ docker() {
     bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/install-script/docker/install.sh)"
     echo "Completed"
 }
+
 HomeBridge() {
     echo "Installing HomeBridge"
     curl -sSfL https://repo.homebridge.io/KEY.gpg | sudo gpg --dearmor | sudo tee /usr/share/keyrings/homebridge.gpg  > /dev/null
@@ -41,7 +42,8 @@ NodeRed() {
     pause_and_retirn
 }
 
-HomeAssistance() {
+HomeAssistant() {
+    echo "installing HomeAssistant"
     if command -v docker &> /dev/null; then
         echo "Docker is already installed."
     else
@@ -57,11 +59,28 @@ HomeAssistance() {
 
 MatterBridge() {
     echo "Installing Matterbridge"
-    
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/smarthome/matterbridge/node/install.sh)"
+    echo "Completed"
+    pause_and_return
+}
+
+MatterBridge-Docker() {
+    echo "Installing Matterbridge(Docker)"
+    if command -v docker &> /dev/null; then
+        echo "Docker is already installed."
+    else
+        echo "Docker not found. Installing..."
+        docker
+    fi
+    sudo mkdir -p /etc/matterbridge
+    sudo wget -O /etc/matterbridge/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/smarthome/matterbridge/docker-compose/compose.yml
+    sudo docker compose -f /etc/matterbridge/compose.yml up -d
+    echo "completed"
+    pause_and_return
 }
 
 PS3="Select your package: "
-options=("HomeBridge" "Zigbee2MQTT" "NodeRed" "Exit")
+options=("HomeBridge" "Zigbee2MQTT" "NodeRed" "HomeAssistant" "MatterBridge" "MatterBridge" "Exit")
 
 while true; do
     select choice in "${options[@]}"; do
@@ -69,6 +88,9 @@ while true; do
             1) HomeBridge ;;
             2) Zigbee2MQTT ;;
             3) NodeRed ;;
+            4) HomeAssistant ;;
+            5) MatterBridge ;;
+            6) MatterBridge-Docker ;;
             4) echo "Exiting..."; exit 0 ;;
             *) echo "Invalid..." ;;
         esac
