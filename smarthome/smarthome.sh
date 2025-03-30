@@ -80,7 +80,7 @@ MatterBridge-Docker() {
 }
 
 PS3="Select your package: "
-options=("HomeBridge" "Zigbee2MQTT" "NodeRed" "HomeAssistant" "MatterBridge" "MatterBridge" "Exit")
+options=("HomeBridge" "Zigbee2MQTT" "NodeRed" "HomeAssistant" "MatterBridge" "MatterBridge(Docker)" "Exit")
 
 while true; do
     select choice in "${options[@]}"; do
