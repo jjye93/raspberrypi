@@ -1,0 +1,13 @@
+services:
+  ani-rss:
+    image: wushuo894/ani-rss:latest
+    container_name: ani-rss
+    environment:
+      - PORT=7789
+      - CONFIG=/config
+      - TZ=Asia/Kuala_Lumpur
+    volumes:
+      - /etc/ani-rss/config:/config
+      - /home/aj/Downloads/Anime:/Media # 番剧挂载路径两侧须一致
+    restart: always
+    network_mode: host
