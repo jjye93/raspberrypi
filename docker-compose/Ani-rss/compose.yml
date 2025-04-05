@@ -8,6 +8,6 @@ services:
       - TZ=Asia/Kuala_Lumpur
     volumes:
       - /etc/ani-rss/config:/config
-      - /home/aj/Downloads/Anime:/Media # 番剧挂载路径两侧须一致
+      - /home/aj/Downloads/Anime:/Media
     restart: always
     network_mode: host
