@@ -6,21 +6,18 @@ Argon-Neo() {
     echo "Installing Argon Neo Configuration"
     bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/argon/ArgonNeo5.sh)"
     echo "Completed"
-    sudo reboot
 }
 
 Argon-One-V3() {
     echo "Installing Argon One V3 Configuration"
     bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/argon/ArgonOneV3.sh)"
     echo "Completed"
-    sudo reboot
 }
 
 Argon-One-V5() {
     echo "Installing Argon One V5 Configuration"
     bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/argon/ArgonOneV5.sh)"
     echo "Completed"
-    sudo reboot
 }
 
 PS3="Select your model: "
