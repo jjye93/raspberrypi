@@ -89,8 +89,7 @@ casaos() {
 
 alist() {
     echo "Installing Alist"
-    sudo -i
-    curl -fsSL "https://alist.nn.ci/v3-en.sh" -o v3-en.sh && bash v3-en.sh
+    bash -c "$(curl -fsSL https://alist.nn.ci/v3-en.sh)"
     echo "Completed"
     pause_and_return
 }
