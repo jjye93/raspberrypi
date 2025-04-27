@@ -49,24 +49,6 @@ portainer() {
 
 }
 
-qbittorrent() {
-    echo "Install qbittorrent"
-    sudo mkdir -p /etc/qbittorrent
-    sudo wget -O /etc/qbittorrent/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/qbittorrent/compose.yml
-    sudo docker compose -f /etc/qbittorrent/compose.yml up -d
-    echo "completed"
-    pause_and_return    
-}
-
-alist() {
-    echo "Install alist"
-    sudo mkdir -p /etc/alist
-    sudo wget -O /etc/alist/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/alist/compose.yml
-    sudo docker compose -f /etc/alist/compose.yml up -d
-    echo "completed"
-    pause_and_return    
-}
-
 homeassistant() {
     echo "Install homeassistant"
     sudo mkdir -p /etc/homeassistant
@@ -76,17 +58,17 @@ homeassistant() {
     pause_and_return    
 }
 
-autobangumi() {
-    echo "Install autobangumi"
-    sudo mkdir -p /etc/autobangumi
-    sudo wget -O /etc/autobangumi/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/autobangumi/compose.yml
-    sudo docker compose -f /etc/autobangumi/compose.yml up -d
+ani-rss() {
+    echo "Install ani-rss"
+    sudo mkdir -p /etc/ani-rss
+    sudo wget -O /etc/ani-rss/compose.yml https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/Ani-rss/compose.yml
+    sudo docker compose -f /etc/ani-rss/compose.yml up -d
     echo "completed"
-    pause_and_return    
+    pause_and_return
 }
 
 PS3="Select application to run: "
-options=("Docker" "FlareSolverr" "PhotoPrism" "Portainer" "qBittorrent" "alist" "Home Assistant" "AutoBangumi" "Exit")
+options=("Docker" "FlareSolverr" "PhotoPrism" "Portainer" "Home Assistant" "Ani-rss" "Exit")
 
 while true; do
     select choice in "${options[@]}"; do
@@ -95,11 +77,9 @@ while true; do
             2) flaresolverr ;;
             3) photoprism ;;
             4) portainer ;;
-            5) qbittorrent ;;
-            6) alist ;;
-            7) homeassistant ;;    
-            8) autobangumi ;;
-            9) echo "Exiting..."; exit 0 ;;
+            5) homeassistant ;;
+            6) ani-rss ;;
+            7) echo "Exiting..."; exit 0 ;;
             *) echo "Invalid selection. Try again." ;;
         esac
         break
