@@ -19,7 +19,7 @@ cat << EOF | sudo tee /etc/transmission-daemon/settings.json > /dev/null
     "blocklist-url": "http://www.example.com/blocklist",
     "cache-size-mb": 4,
     "dht-enabled": true,
-    "download-dir": "~/Downloads/",
+    "download-dir": "/home/admin/Downloads/",
     "download-limit": 100,
     "download-limit-enabled": 0,
     "download-queue-enabled": true,
@@ -50,8 +50,8 @@ cat << EOF | sudo tee /etc/transmission-daemon/settings.json > /dev/null
     "ratio-limit": 2,
     "ratio-limit-enabled": false,
     "rename-partial-files": true,
-    "rpc-authentication-required": true,
-    "rpc-bind-address": "0.0.0.0",
+    "rpc-authentication-required": false,
+    "rpc-bind-address": "",
     "rpc-enabled": true,
     "rpc-host-whitelist": "",
     "rpc-host-whitelist-enabled": false,
@@ -59,7 +59,7 @@ cat << EOF | sudo tee /etc/transmission-daemon/settings.json > /dev/null
     "rpc-port": 9091,
     "rpc-url": "/transmission/",
     "rpc-username": "admin",
-    "rpc-whitelist": "127.0.0.1",
+    "rpc-whitelist": "",
     "rpc-whitelist-enabled": false,
     "scrape-paused-torrents-enabled": true,
     "script-torrent-done-enabled": false,
@@ -96,7 +96,7 @@ cat << EOF | sudo tee /etc/init.d/transmission-daemon > /dev/null
 
 NAME=transmission-daemon
 DAEMON=/usr/bin/$NAME
-USER=$USER
+USER=admin
 STOP_TIMEOUT=30
 
 export PATH="${PATH:+$PATH:}/sbin"
@@ -167,7 +167,7 @@ Description=Transmission BitTorrent Daemon
 After=network.target
 
 [Service]
-User=$USER              
+User=admin              
 Type=notify
 ExecStart=/usr/bin/transmission-daemon -f --log-error
 ExecStop=/bin/kill -s STOP $MAINPID
@@ -180,9 +180,9 @@ WantedBy=multi-user.target
 EOF
 
 sudo systemctl daemon-reload
-sudo chown -R $USER:$USER /etc/transmission-daemon
-sudo mkdir -p /home/$USER/.config/transmission-daemon/
-sudo ln -s /etc/transmission-daemon/settings.json /home/$USER/.config/transmission-daemon/
-sudo chown -R $USER:$USER /home/$USER/.config/transmission-daemon/
+sudo chown -R admin:admin /etc/transmission-daemon
+sudo mkdir -p /home/admin/.config/transmission-daemon/
+sudo ln -s /etc/transmission-daemon/settings.json /home/admin/.config/transmission-daemon/
+sudo chown -R admin:admin /home/admin/.config/transmission-daemon/
 sudo systemctl start transmission-daemon
 sudo systemctl enable transmission-daemon
