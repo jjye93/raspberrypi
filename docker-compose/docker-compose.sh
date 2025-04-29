@@ -72,7 +72,7 @@ immich() {
     sudo mkdir -p /etc/immich
     sudo wget -O /etc/immich/compose.yml https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/immich/compose.yml
     sudo wget -O /etc/immich/.env https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/immich/.env
-    sudo docker compose -f /etc/immich/compose.yml
+    sudo docker compose -f /etc/immich/compose.yml up -d
     echo "completed"
     pause_and-return
 }
