@@ -1,5 +1,5 @@
 services:
-  immich-server:
+  immich:
     container_name: immich
     image: ghcr.io/immich-app/immich-server:latest
     volumes:
@@ -10,8 +10,8 @@ services:
       - UPLOAD_LOCATION=/home/admin/Pictures
       - DB_DATA_LOCATION=/etc/immich/db
       - DB_DATABASE_NAME=immich
-      - DB_USERNAME="postgres"
-      - DB_PASSPORT="postgres"
+      - DB_USERNAME=postgres
+      - DB_PASSPORT=postgres
     ports:
       - '2283:2283'
     depends_on:
@@ -47,10 +47,10 @@ services:
     container_name: immich_postgres
     image: docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:739cdd626151ff1f796dc95a6591b55a714f341c737e27f045019ceabf8e8c52
     environment:
-      - POSTGRES_PASSWORD: "postgres"
-      - POSTGRES_USER: "postgres"
-      - POSTGRES_DB: "immich"
-      - POSTGRES_INITDB_ARGS: '--data-checksums'
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_DB: "immich"
+      POSTGRES_INITDB_ARGS: '--data-checksums'
     volumes:
       - /etc/immich/db:/var/lib/postgresql/data
     healthcheck:
