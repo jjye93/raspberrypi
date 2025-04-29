@@ -19,14 +19,14 @@ services:
       - "2342:2342"
     environment:
       PHOTOPRISM_ADMIN_USER: "admin"                 # admin login username
-      PHOTOPRISM_ADMIN_PASSWORD: "admin"          # initial admin password (8-72 characters)
+      PHOTOPRISM_ADMIN_PASSWORD: "qwer1234"          # initial admin password (8-72 characters)
       PHOTOPRISM_AUTH_MODE: "password"               # authentication mode (public, password)
       PHOTOPRISM_SITE_URL: "http://localhost:2342/"  # server URL in the format "http(s)://domain.name(:port)/(path)"
       PHOTOPRISM_DISABLE_TLS: "false"                # disables HTTPS/TLS even if the site URL starts with https:// and a certificate is available
       PHOTOPRISM_DEFAULT_TLS: "true"                 # defaults to a self-signed HTTPS/TLS certificate if no other certificate is available
       PHOTOPRISM_ORIGINALS_LIMIT: 5000               # file size limit for originals in MB (increase for high-res video)
-      PHOTOPRISM_HTTP_COMPRESSION: "none"            # improves transfer speed and bandwidth utilization (none or gzip)
-      PHOTOPRISM_WORKERS: 4                          # limits the number of indexing workers to reduce system load
+      PHOTOPRISM_HTTP_COMPRESSION: "gzip"            # improves transfer speed and bandwidth utilization (none or gzip)
+      PHOTOPRISM_WORKERS: 2                          # limits the number of indexing workers to reduce system load
       PHOTOPRISM_LOG_LEVEL: "info"                   # log level: trace, debug, info, warning, error, fatal, or panic
       PHOTOPRISM_READONLY: "false"                   # do not modify originals directory (reduced functionality)
       PHOTOPRISM_EXPERIMENTAL: "false"               # enables experimental features
@@ -48,14 +48,17 @@ services:
       PHOTOPRISM_AUTO_IMPORT: -1                     # delay before automatically importing files in SECONDS when uploading via WebDAV (-1 to disable)
       PHOTOPRISM_DETECT_NSFW: "false"                # automatically flags photos as private that MAY be offensive (requires TensorFlow)
       PHOTOPRISM_UPLOAD_NSFW: "true"                 # allow uploads that MAY be offensive
+      PHOTOPRISM_UPLOAD_ALLOW: ""
+      PHOTOPRISM_UPLOAD_ARCHIVES: "true"
       PHOTOPRISM_DATABASE_DRIVER: "mysql"            # MariaDB 10.5.12+ (MySQL successor) offers significantly better performance compared to SQLite
       PHOTOPRISM_DATABASE_SERVER: "mariadb:3306"     # MariaDB database server (hostname:port)
       PHOTOPRISM_DATABASE_NAME: "photoprism"         # MariaDB database schema name
       PHOTOPRISM_DATABASE_USER: "photoprism"         # MariaDB database user name
-      PHOTOPRISM_DATABASE_PASSWORD: "insecure"       # MariaDB database user password
+      PHOTOPRISM_DATABASE_PASSWORD: "photoprism"       # MariaDB database user password
       PHOTOPRISM_SITE_CAPTION: "AI-Powered Photos App"
       PHOTOPRISM_SITE_DESCRIPTION: ""                # meta site description
       PHOTOPRISM_SITE_AUTHOR: ""                     # meta site author
+      PHOTOPRISM_INIT: "https"
       ## Video Transcoding (https://docs.photoprism.app/getting-started/advanced/transcoding/):
       # PHOTOPRISM_FFMPEG_ENCODER: "software"        # H.264/AVC encoder (software, intel, nvidia, apple, raspberry, or vaapi)
       # PHOTOPRISM_FFMPEG_SIZE: "1920"               # video size limit in pixels (720-7680) (default: 3840)
@@ -63,12 +66,12 @@ services:
       ## Run/install on first startup (options: update, gpu, tensorflow, davfs, clean):
       # PHOTOPRISM_INIT: "update clean"
       ## Run as a non-root user after initialization (supported: 0, 33, 50-99, 500-600, and 900-1200):
-      PHOTOPRISM_UID: 1000
-      PHOTOPRISM_GID: 1000
-      PHOTOPRISM_UMASK: 022
+      # PHOTOPRISM_UID: 1000
+      # PHOTOPRISM_GID: 1000
+      # PHOTOPRISM_UMASK: 022
     working_dir: "/photoprism" # do not change or remove
     volumes:
-      - "~/Pictures/originals:/photoprism/originals"               # Original media files (DO NOT REMOVE)
+      - "~/Pictures/Photoprism:/photoprism/originals"               # Original media files (DO NOT REMOVE)
       - "~/Pictures/import:/photoprism/import"                  # *Optional* base folder from which files can be imported to originals
       - "./storage:/photoprism/storage"                  # *Writable* storage folder for cache, database, and sidecar files (DO NOT REMOVE)
 
@@ -88,17 +91,5 @@ services:
       MARIADB_INITDB_SKIP_TZINFO: "1"
       MARIADB_DATABASE: "photoprism"
       MARIADB_USER: "photoprism"
-      MARIADB_PASSWORD: "admin"
-      MARIADB_ROOT_PASSWORD: "admin"
-
-  ## Watchtower upgrades services automatically (optional)
-  ## see https://docs.photoprism.app/getting-started/updates/#watchtower
-  #
-  watchtower:
-    restart: unless-stopped
-    image: containrrr/watchtower
-    environment:
-      WATCHTOWER_CLEANUP: "true"
-      WATCHTOWER_POLL_INTERVAL: 7200 # checks for updates every two hours
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      MARIADB_PASSWORD: "photoprism"
+      MARIADB_ROOT_PASSWORD: "photoprism"
