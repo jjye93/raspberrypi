@@ -67,8 +67,18 @@ ani-rss() {
     pause_and_return
 }
 
+immich() {
+    echo "Install immich"
+    sudo mkdir -p /etc/immich
+    sudo wget -O /etc/immich/compose.yml https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/immich/compose.yml
+    sudo wget -O /etc/immich/.env https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/immich/.env
+    sudo docker compose -f /etc/immich/compose.yml
+    echo "completed"
+    pause_and-return
+}
+
 PS3="Select application to run: "
-options=("Docker" "FlareSolverr" "PhotoPrism" "Portainer" "Home Assistant" "Ani-rss" "Exit")
+options=("Docker" "FlareSolverr" "PhotoPrism" "Portainer" "Home Assistant" "Ani-rss" "immich" "Exit")
 
 while true; do
     select choice in "${options[@]}"; do
@@ -79,7 +89,8 @@ while true; do
             4) portainer ;;
             5) homeassistant ;;
             6) ani-rss ;;
-            7) echo "Exiting..."; exit 0 ;;
+            7) immich ;;
+            8) echo "Exiting..."; exit 0 ;;
             *) echo "Invalid selection. Try again." ;;
         esac
         break
