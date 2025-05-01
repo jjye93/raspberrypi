@@ -21,9 +21,7 @@ docker() {
 
 HomeBridge() {
     echo "Installing HomeBridge"
-    curl -sSfL https://repo.homebridge.io/KEY.gpg | sudo gpg --dearmor | sudo tee /usr/share/keyrings/homebridge.gpg  > /dev/null
-    echo "deb [signed-by=/usr/share/keyrings/homebridge.gpg] https://repo.homebridge.io stable main" | sudo tee /etc/apt/sources.list.d/homebridge.list > /dev/null
-    sudo apt-get install homebridge -y
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/smarthome/homebridge/install.sh)"
     echo "Completed" 
     pause_and_return   
 }
