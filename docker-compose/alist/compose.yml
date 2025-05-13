@@ -1,4 +1,4 @@
-service:
+services:
   alist:
     image: xhofe/alist:latest
     container_name: alist
