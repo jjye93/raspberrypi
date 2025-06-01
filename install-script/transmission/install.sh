@@ -157,31 +157,5 @@ esac
 exit 0
 EOF
 
-sudo rm /etc/systemd/system/multi-user.target.wants/transmission-daemon.service
-
-cat << EOF | sudo tee /etc/systemd/system/multi-user.target.wants/transmission-daemon.service > /dev/null
-
-[Unit]
-Description=Transmission BitTorrent Daemon
-After=network.target
-
-[Service]
-User=admin              
-Type=notify
-ExecStart=/usr/bin/transmission-daemon -f --log-error
-ExecStop=/bin/kill -s STOP $MAINPID
-ExecReload=/bin/kill -s HUP $MAINPID
-NoNewPrivileges=true
-
-[Install]
-WantedBy=multi-user.target
-
-EOF
-
-sudo systemctl daemon-reload
-sudo chown -R admin:admin /etc/transmission-daemon
-sudo mkdir -p /home/admin/.config/transmission-daemon/
-sudo ln -s /etc/transmission-daemon/settings.json /home/admin/.config/transmission-daemon/
-sudo chown -R admin:admin /home/admin/.config/transmission-daemon/
 sudo systemctl start transmission-daemon
 sudo systemctl enable transmission-daemon
