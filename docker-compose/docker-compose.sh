@@ -24,8 +24,8 @@ install_docker() {
 flaresolverr() {
     echo "Install Flaresolverr"
     sudo mkdir -p /etc/flaresolverr
-    sudo wget -O /etc/flaresolverr/compose.yml  https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/docker-compose/flaresolverr/compose.yml
-    sudo docker compose -f /etc/flaresolverr/compose.yml up -d
+    sudo git clone -O /etc/flaresolverr https://github.com/FlareSolverr/FlareSolverr.git
+    sudo docker compose -f /etc/flaresolverr/docker-compose.yml up -d
     echo "completed"
     pause_and_return
 }
