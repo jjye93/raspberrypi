@@ -1,0 +1,12 @@
+services:
+  chrome:
+    container_name: chrome
+    image: kasmweb/chrome:latest
+    volumes: 
+      - /home/aj/Downloads:/home/kasm-user/Download
+    ports:
+      - 6901:6901
+    environment:
+      - LAUNCH_URL="192.168.100.1"
+      - VNC_PW="qwer1234"
+    restart: unless-stopped
