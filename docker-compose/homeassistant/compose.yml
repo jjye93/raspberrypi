@@ -18,6 +18,6 @@ services:
     security_opt:
       - apparmor:unconfined
     volumes:
-       - ${USERDIR:-$HOME}/docker/matter-server/data:/data/
+      - ${USERDIR:-$HOME}/docker/matter-server/data:/data/
       - /run/dbus:/run/dbus:ro
     command: --storage-path /data --paa-root-cert-dir /data/credentials --bluetooth-adapter 0
