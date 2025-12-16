@@ -1,0 +1,8 @@
+services:
+  kvideo:
+    image: kuekhaoyang/kvideo:latest
+    container_name: kvideo
+    network_mode: host
+    environment:
+      - PORT=8888
+    restart: unless-stopped
