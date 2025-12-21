@@ -7,7 +7,7 @@ services:
       - CONFIG=/config
       - TZ=Asia/Kuala_Lumpur
     volumes:
-      - /home/admin/Applications/ani-rss:/config
+      - ./config:/config
       - /home/admin/Downloads/ani-rss:/Media
     restart: always
     network_mode: host
