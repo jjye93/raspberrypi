@@ -18,5 +18,35 @@
     "extra": {
       "gfw": true
     }
-  }
+  },
+  {
+    "id": "wmcj8",
+    "name": "成人07",
+    "api": "http://wmcj8.com/inc/surl.php",
+    "nsfw": true,
+    "type": 0,
+    "extra": {
+      "gfw": false
+    }
+  },
+  {
+    "id": "xingba222",
+    "name": "杏吧资源",
+    "api": "https://xingba222.com/url.php/provide",
+    "nsfw": true,
+    "type": 0,
+    "extra": {
+      "gfw": true
+    }
+  },
+  {
+    "id": "madou",
+    "name": "麻豆视频",
+    "api": "http://www.madouse.la/url.php/provide/vod/",
+    "nsfw": true,
+    "type": 0,
+    "extra": {
+      "gfw": true
+    }
+  },
 ]
