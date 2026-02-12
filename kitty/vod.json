@@ -20,5 +20,38 @@
     "extra": {
       "gfw": false
     }
+  },
+  {
+    "id": "mtzy.me",
+    "name": "茅台资源",
+    "type": 0,
+    "logo": "https://mtzy.me/template/default/images/logo.png",
+    "nsfw": false,
+    "api": "https://caiji.maotaizy.cc/api.php",
+    "extra": {
+      "gfw": false
+    }
+  },
+  {
+    "id": "aqyzy",
+    "name": "爱奇艺",
+    "type": 0,
+    "logo": "",
+    "nsfw": false,
+    "api": "https://iqiyizyapi.com/api.php/provide/vod",
+    "extra": {
+      "gfw": false
+    }
+  },
+  {
+    "id": "caijidb",
+    "name": "豆瓣资源",
+    "type": 0,
+    "logo": "",
+    "nsfw": false,
+    "api": "https://caiji.dbzy5.com/api.php/provide/vod",
+    "extra": {
+      "gfw": false
+    }
   }
 ]
