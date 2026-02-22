@@ -1,0 +1,498 @@
+[
+    {
+        "id": "yxxq3",
+        "name": "📺映像星球",
+        "api": "https://yxxq3.cc",
+        "desc": "普通视图，可以首页",
+        "type": 1,
+        "nsfw": false,
+        "extra": {
+            "js": {
+                "category": [
+                    {
+                        "text": "电影",
+                        "id": "/top/1-----------.html"
+                    },
+                    {
+                        "text": "剧集",
+                        "id": "/top/2-----------.html"
+                    },
+                    {
+                        "text": "综艺",
+                        "id": "/top/3-----------.html"
+                    },
+                    {
+                        "text": "动漫",
+                        "id": "/top/4-----------.html"
+                    },
+                    {
+                        "text": "记录",
+                        "id": "/top/5-----------.html"
+                    },
+                    {
+                        "text": "短剧",
+                        "id": "/top/6-----------.html"
+                    }
+                ],
+                "home": "const cate = env.get(\"category\") || '/top/1-----------.html';\nconst page = Number(env.get(\"page\")||1);\nlet url = cate;\nif(page>1){ url = cate.replace('-----------.html',`--------${page}---.html`); }\nconst fullUrl = `${env.baseUrl}${url}`;\nconst resp = await req(fullUrl,{headers:{'User-Agent':'Mozilla/5.0'},timeout:20000});\nconst html = resp.content || resp;\nconst $ = kitty.load(html);\nconst items = [];\n$('a.module-poster-item').each((i,el)=>{\n  const link = $(el).attr('href');\n  if(!link) return;\n  const id = link.replace(env.baseUrl,'');\n  const title = $(el).find('.module-poster-item-title').text().trim();\n  const imgEl = $(el).find('img').first();\n  const cover = (imgEl.attr('data-original')||imgEl.attr('src')||'').trim();\n  const remark = $(el).find('.module-item-note').text().trim();\n  if(id && title){ items.push({id,title,cover,remark}); }\n});\nreturn items;",
+                "search": "const wd = String(env.get(\"keyword\")||'');\nconst page = Number(env.get(\"page\")||1);\nconst url = `${env.baseUrl}/search/${encodeURIComponent(wd)}----------${page}---.html`;\nconst resp = await req(url,{headers:{'User-Agent':'Mozilla/5.0'},timeout:20000});\nconst html = resp.content || resp;\nconst $ = kitty.load(html);\nconst items = [];\n$('div.module-card-item.module-item').each((i,el)=>{\n  const detailLink = $(el).find('a.module-card-item-poster').attr('href') || '';\n  if(!detailLink) return;\n  const id = detailLink.replace(env.baseUrl,'');\n  const title = $(el).find('.module-card-item-title strong').text().trim();\n  const imgEl = $(el).find('img').first();\n  const cover = (imgEl.attr('data-original')||imgEl.attr('src')||'').trim();\n  const remark = $(el).find('.module-item-note').text().trim();\n  const info = $(el).find('.module-info-item-content').first().text().trim();\n  if(id && title){ items.push({id,title,cover,remark: remark || info}); }\n});\nreturn items;",
+                "detail": "const id = env.get(\"movieId\")||'';\nconst title = env.get(\"title\") || '';\nconst url = `${env.baseUrl}${id}`;\nconst resp = await req(url,{headers:{'User-Agent':'Mozilla/5.0'},timeout:20000});\nconst html = resp.content || resp;\nconst $ = kitty.load(html);\nlet cover = $('img.lazyload').attr('data-original') || $('img.lazyload').attr('src') || `${env.baseUrl}/mxtheme/images/errorpic.png`;\nlet descParts = [];\n$('div.module-info-content p').each((i,p)=>{ const t=$(p).text().trim(); if(t) descParts.push(t); });\nconst desc = descParts.join(\"\\\\n\");\nlet playlist = [];\n$('a.module-play-list-link').each((i,a)=>{\n  const link = $(a).attr('href');\n  const text = $(a).text().trim();\n  if(link){\n    const playUrl = link.startsWith('http')? link : `${env.baseUrl}${link}`;\n    playlist.push({ title: text, videos: [ { text: text, id: playUrl, type: 'web_direct' } ] });\n  }\n});\nreturn {id,title,cover,desc,playlist};"
+            },
+            "note": "说明：\\n1. 分类分页：/top/{分类ID}--------{页码}---.html。\\n2. 搜索分页：/search/{关键词}----------{页码}---.html。\\n3. 列表项：分类页在 a.module-poster-item 内解析，搜索页在 div.module-card-item 内解析。封面优先取 img[data-original]。\\n4. 详情页：简介在 div.module-info-content p。\\n5. 播放列表：在 a.module-play-list-link 内，拼接为完整地址。"
+        }
+    },
+    {
+        "id": "rebozj",
+        "name": "📺热播之家",
+        "api": "https://www.rebozj.pro",
+        "type": 1,
+        "desc": "普通视图，可以加成首页复杂视图",
+        "nsfw": false,
+        "extra": {
+            "js": {
+                "category": [
+                    {
+                        "text": "首页",
+                        "id": "/"
+                    },
+                    {
+                        "text": "电影",
+                        "id": "/type/1.html"
+                    },
+                    {
+                        "text": "剧集",
+                        "id": "/type/2.html"
+                    },
+                    {
+                        "text": "纪录",
+                        "id": "/type/3.html"
+                    },
+                    {
+                        "text": "动漫",
+                        "id": "/type/4.html"
+                    },
+                    {
+                        "text": "综艺",
+                        "id": "/type/5.html"
+                    }
+                ],
+                "home": "const cate = env.get(\"category\") || '/type/1.html';\nconst page = Number(env.get(\"page\") || 1);\nlet url;\nif(page === 1){ url = `${env.baseUrl}${cate}`; } else {\n  const cid = cate.match(/\\/type\\/(\\d+)/)[1];\n  url = `${env.baseUrl}/type/${cid}-${page}.html`;\n}\nconst resp = await req(url,{headers:{'User-Agent':'Mozilla/5.0','Referer':env.baseUrl},timeout:20000});\nconst html = resp.content || resp;\nconst $ = kitty.load(html);\nconst items = [];\n$('.stui-vodlist__box').each((i,el)=>{\n  const link = $(el).find('a.stui-vodlist__thumb').attr('href');\n  const id = link ? link.replace(env.baseUrl,'') : '';\n  const title = $(el).find('.stui-vodlist__detail h4 a').text().trim();\n  const cover = $(el).find('a.stui-vodlist__thumb').attr('data-original') || '';\n  const remark = $(el).find('.pic-tag').text().trim();\n  if(id && title){ items.push({id,title,cover,remark}); }\n});\nreturn items;",
+                "search": "const wd = String(env.get(\"keyword\")||'');\nconst page = Number(env.get(\"page\")||1);\nlet url = `${env.baseUrl}/search/${encodeURIComponent(wd)}----------${page}---.html`;\nconst resp = await req(url,{headers:{'User-Agent':'Mozilla/5.0','Referer':env.baseUrl},timeout:20000});\nconst html = resp.content || resp;\nconst $ = kitty.load(html);\nconst items = [];\n$('.stui-vodlist__box').each((i,el)=>{\n  const link = $(el).find('a.stui-vodlist__thumb').attr('href');\n  const id = link ? link.replace(env.baseUrl,'') : '';\n  const title = $(el).find('.stui-vodlist__detail h4 a').text().trim();\n  const cover = $(el).find('a.stui-vodlist__thumb').attr('data-original') || '';\n  const remark = $(el).find('.pic-tag').text().trim();\n  if(id && title){ items.push({id,title,cover,remark}); }\n});\nreturn items;",
+                "detail": "const id = env.get(\"movieId\")||'';\nconst url = `${env.baseUrl}${id}`;\nconst resp = await req(url,{headers:{'User-Agent':'Mozilla/5.0','Referer':env.baseUrl},timeout:20000});\nconst html = resp.content || resp;\nconst $ = kitty.load(html);\nconst title = $('h1.title').text().trim() || $('.stui-vodlist__detail h4 a').text().trim();\nconst cover = $('.stui-vodlist__thumb').attr('data-original') || '';\nconst desc = $('.detail-content').text().trim() || $('.detail-sketch').text().trim();\nlet playlist = [];\n// 网盘分组\nlet netdiskVideos = [];\n$('.play-btn a[target=\"_blank\"]').each((i,a)=>{\n  const text = $(a).text().trim();\n  const href = $(a).attr('href');\n  if(href){ netdiskVideos.push({text,id:href,type:'download'}); }\n});\nif(netdiskVideos.length){ playlist.push({title:'网盘播放',videos:netdiskVideos}); }\n// 站内分组\n$('.tab-content .tab-pane').each((i,panel)=>{\n  const groupTitle = `线路${String.fromCharCode(65+i)}`;\n  let videos = [];\n  $(panel).find('a').each((j,a)=>{\n    const text = $(a).text().trim();\n    const href = $(a).attr('href');\n    if(href){\n      const fullUrl = href.startsWith('http')?href:`${env.baseUrl}${href}`;\n      if(!videos.find(v=>v.id===fullUrl)){\n        videos.push({text,id:fullUrl,type:'web_direct'});\n      }\n    }\n  });\n  if(videos.length){ playlist.push({title:groupTitle,videos}); }\n});\nreturn {id,title,cover,desc,playlist};"
+            },
+            "note": "说明：\\n1. 分类页：第一页 /type/{id}.html，第二页以后 /type/{id}-{page}.html。\\n2. 搜索页：/search/{关键词}----------{页码}---.html。\\n3. 详情页：简介在 .detail-content 或 .detail-sketch。\\n4. 播放列表分两部分：网盘分组在 .play-btn a[target='_blank']，作为一个分组；站内分组在 .tab-content .tab-pane，每个 playlistX 是一个分组，命名为 线路A、线路B、线路C。\\n5. 播放入口和下载入口返回完整 URL，不带 sniffer 配置。\\n6. 封面取 data-original。"
+        }
+    },
+    {
+        "id": "music_aiwan",
+        "name": "🎵爱玩音乐",
+        "api": "https://www.22a5.com",
+        "type": 1,
+        "desc": "分类、搜索、详情页，支持 direct + mp3 + mv 播放，含嗅探",
+        "nsfw": false,
+        "extra": {
+            "js": {
+                "category": [
+                    {
+                        "text": "首页",
+                        "id": "index"
+                    },
+                    {
+                        "text": "新歌",
+                        "id": "new"
+                    },
+                    {
+                        "text": "TOP榜",
+                        "id": "top"
+                    },
+                    {
+                        "text": "DJ舞曲",
+                        "id": "djwuqu"
+                    },
+                    {
+                        "text": "歌手",
+                        "id": "singerlist/index/index/index/index"
+                    },
+                    {
+                        "text": "歌单",
+                        "id": "playtype"
+                    },
+                    {
+                        "text": "电台",
+                        "id": "radiolist"
+                    },
+                    {
+                        "text": "高清MV",
+                        "id": "mvlist"
+                    }
+                ],
+                "home": "const cate = env.get(\"category\") || 'top';\nconst page = Number(env.get(\"page\")||1);\nlet url;\nif(cate==='index'){\n  url = `${env.baseUrl}/${page===1?'':'index_'+page+'.html'}`;\n}else if(cate==='new' || cate==='top' || cate==='djwuqu'){\n  url = `${env.baseUrl}/list/${cate}/${page}.html`;\n}else if(cate==='playtype'){\n  url = `${env.baseUrl}/playtype/index/${page}.html`;\n}else if(cate==='radiolist'){\n  url = `${env.baseUrl}/radiolist/index/${page}.html`;\n}else if(cate==='mvlist'){\n  url = `${env.baseUrl}/mvlist/index/${page}.html`;\n}else if(cate.startsWith('singerlist')){\n  url = `${env.baseUrl}/${cate}.html?page=${page}`;\n}else{\n  url = `${env.baseUrl}/index_${page}.html`;\n}\n\nconst resp = await req(url,{headers:{'User-Agent':'Mozilla/5.0'},timeout:30000});\nconst html = resp.content || resp;\nif(!html) return [];\nconst $ = kitty.load(html);\n\nlet items = [];\n$('li').each((i,el)=>{\n  const link = $(el).find('div.name a').attr('href') || $(el).find('div.pic a').attr('href');\n  const title = $(el).find('div.name a').text().trim();\n  const cover = $(el).find('div.pic img').attr('src') || '';\n  if(link && title){\n    let id = link;\n    if(!id.startsWith('/')) id = '/' + id;\n    id = new URL(id, env.baseUrl).href;\n    items.push({id,title,cover});\n  }\n});\nreturn items;",
+                "search": "const wd = String(env.get(\"keyword\")||'');\nconst page = Number(env.get(\"page\")||1);\nconst url = `${env.baseUrl}/so/${encodeURIComponent(wd)}/${page}.html`;\nconst resp = await req(url,{headers:{'User-Agent':'Mozilla/5.0'},timeout:30000});\nconst html = resp.content || resp;\nif(!html) return [];\nconst $ = kitty.load(html);\n\nlet items = [];\n$('li').each((i,el)=>{\n  const link = $(el).find('div.name a').attr('href') || $(el).find('div.pic a').attr('href');\n  const title = $(el).find('div.name a').text().trim();\n  const cover = $(el).find('div.pic img').attr('src') || '';\n  if(link && title){\n    let id = link;\n    if(!id.startsWith('/')) id = '/' + id;\n    id = new URL(id, env.baseUrl).href;\n    items.push({id,title,cover});\n  }\n});\nreturn items;",
+                "detail": "const id = env.get(\"movieId\")||'';\nconst url = new URL(id, env.baseUrl).href;\nconst resp = await req(url,{headers:{'User-Agent':'Mozilla/5.0'},timeout:30000});\nconst html = resp.content || resp;\nif(!html) return {};\nconst $ = kitty.load(html);\n\nlet cover = $('div.djpic img#mcover').attr('src') || $('div.pic img').attr('src') || '';\nlet desc = $('div.dance_wl').text().trim() || url;\n\nlet videos = [];\n\nif(url.includes('/singer/')){\n  $('li div.name a[href*=\"/mp3/\"]').each((i,el)=>{\n    const href = $(el).attr('href');\n    const text = $(el).text().trim();\n    if(href){\n      let playUrl = new URL(href, env.baseUrl).href;\n      videos.push({ text, id: playUrl, type: \"direct\" });\n    }\n  });\n}else if(url.includes('/playlist/') || url.includes('/radio/')){\n  $('li div.name a[href*=\"/mp3/\"]').each((i,el)=>{\n    const href = $(el).attr('href');\n    const text = $(el).text().trim();\n    if(href){\n      let playUrl = new URL(href, env.baseUrl).href;\n      videos.push({ text, id: playUrl, type: \"direct\" });\n    }\n  });\n}else if(url.includes('/mp3/') || url.includes('/mp4/')){\n  if(url.includes('/mp3/')){\n    videos.push({ text: \"🎵播放(mp3)\", id: url, type: \"direct\" });\n  }\n  if(url.includes('/mp4/')){\n    videos.push({ text: \"🎬播放(mv)\", id: url, type: \"direct\" });\n  }\n}else{\n  videos.push({ text: \"播放(详情页)\", id: url, type: \"direct\" });\n}\n\n// 生成 iframe 播放分组，按钮名称保持原样\nlet iframeVideos = videos.map(v => ({ text: v.text, url: v.id, type: \"iframe\" }));\n\nlet playlist = [\n  { title: \"播放入口(嗅探)\", videos },\n  { title: \"播放入口(WEB)\", videos: iframeVideos }\n];\n\nreturn { cover, desc, playlist };"
+            },
+            "sniffer": {
+                "mode": 0,
+                "timeout": 15000,
+                "enabled": true,
+                "customRegex": "https?://[^\"'\\s]+\\.(?:m4a|mp4|mp3)[^\"'\\s]*",
+                "headers": {
+                    "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_2_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.2 Mobile/15E148 Safari/604.1",
+                    "Referer": "https://www.22a5.com"
+                }
+            }
+        }
+    },
+    {
+        "id": "NaihenVideo",
+        "name": "🎥Naihen",
+        "api": "https://yy2od7x.naihendalolo.cyou",
+        "type": 1,
+        "desc": "支持首页复杂视图，分页，搜索，详情页播放。",
+        "nsfw": true,
+        "extra": {
+            "js": {
+                "category": [
+                    {
+                        "text": "首页推荐",
+                        "id": "ddd/"
+                    },
+                    {
+                        "text": "国产传媒",
+                        "id": "vodtype/115/"
+                    },
+                    {
+                        "text": "国产精品",
+                        "id": "vodtype/10/"
+                    },
+                    {
+                        "text": "国产视频",
+                        "id": "vodtype/1/"
+                    },
+                    {
+                        "text": "欧美视频",
+                        "id": "vodtype/5/"
+                    },
+                    {
+                        "text": "日本视频",
+                        "id": "vodtype/2/"
+                    },
+                    {
+                        "text": "主播大秀",
+                        "id": "vodtype/12/"
+                    },
+                    {
+                        "text": "动画视频",
+                        "id": "vodtype/6/"
+                    }
+                ],
+                "home": "const cate=env.get('category')||'vodtype/115/';\nconst page=Number(env.get('page')||1);\nconst BASE=env.baseUrl.replace(/\\/+$/, '');\n\nif(cate==='ddd/'){\n  const url=`${BASE}/ddd/`;\n  const resp=await req(url,{timeout:30000});\n  const html=resp.content||resp;\n  if(!html) return [];\n  const $=kitty.load(html);\n  const modules=[];\n  const allItems=[];\n\n  // 统一解析函数\n  function parseItem(el){\n    const a=$(el).find('a.group-item');\n    const id=new URL(a.attr('href')||'#',BASE).href;\n    const title=a.find('p').text().trim();\n    let cover=a.find('img').attr('data-src')||a.find('img').attr('src')||'';\n    if(cover.startsWith('//')) cover='https:'+cover;\n    if(cover.startsWith('/')) cover=BASE+cover;\n    const remark=$(el).find('span.layui-badge.score').text().trim()||'HD';\n    if(id&&title){ return {id,title,cover,remark}; }\n    return null;\n  }\n\n  $('div.layui-col-md3.m-md6').each((i,el)=>{\n    const item=parseItem(el);\n    if(item) allItems.push(item);\n  });\n\n  // Banner: 前16个视频\n  const bannerItems=allItems.slice(0,16).map(v=>({...v,remark:'精选'}));\n  if(bannerItems.length){ modules.push({type:'banner',title:'首页推荐',videos:bannerItems}); }\n\n  // List 模块: 后面每4个视频一组\n  const listTitles=['大奶系列','网曝门事件','国产精品','步兵无码','起点传媒','乐播传媒'];\n  for(let i=0;i<listTitles.length;i++){\n    const groupItems=allItems.slice(16+i*4,16+(i+1)*4);\n    if(groupItems.length){ modules.push({type:'list',title:listTitles[i],videos:groupItems}); }\n  }\n\n  return {type:'complex',data:modules};\n} else {\n  const url=`${BASE}/${cate.replace(/\\/$/,'')}-${page}/`;\n  const resp=await req(url,{timeout:30000});\n  const html=resp.content||resp;\n  if(!html) return [];\n  const $=kitty.load(html);\n  let items=[];\n  $('.layui-col-md3').each((i,el)=>{\n    const link=$(el).find('a.group-item').attr('href');\n    const title=$(el).find('p').text().trim();\n    let cover=$(el).find('img').attr('data-src')||$(el).find('img').attr('src')||'';\n    if(cover){\n      if(cover.startsWith('//')) cover='https:'+cover;\n      if(cover.startsWith('/')) cover=BASE+cover;\n    }\n    const remark=$(el).find('span.layui-badge.score').text().trim();\n    if(link&&title){\n      let id=new URL(link,BASE).href;\n      items.push({id,title,cover,remark});\n    }\n  });\n  return items;\n}",
+                "search": "const wd=String(env.get('keyword')||'');\nconst page=Number(env.get('page')||1);\nif(!wd) return [];\nconst url=`${env.baseUrl}/vodsearch/${encodeURIComponent(wd)}----------${page}---/`;\nconst resp=await req(url,{timeout:30000});\nconst html=resp.content||resp;\nif(!html) return [];\nconst $=kitty.load(html);\nlet items=[];\n$('.layui-col-md3').each((i,el)=>{\n  const link=$(el).find('a.group-item').attr('href');\n  const title=$(el).find('p').text().trim();\n  let cover=$(el).find('img').attr('data-src')||$(el).find('img').attr('src')||'';\n  if(cover){\n    if(cover.startsWith('//')) cover='https:'+cover;\n    if(cover.startsWith('/')) cover=env.baseUrl+cover;\n  }\n  const remark=$(el).find('span.layui-badge.score').text().trim();\n  if(link&&title){\n    let id=new URL(link,env.baseUrl).href;\n    items.push({id,title,cover,remark});\n  }\n});\nreturn items;",
+                "detail": "const id=env.get('movieId')||'';\nconst url=new URL(id,env.baseUrl).href;\nconst resp=await req(url,{timeout:30000});\nconst html=resp.content||resp;\nif(!html) return {};\nconst $=kitty.load(html);\n\nlet title=$('title').text().trim()||$('.vod-txt a').text().trim();\nlet cover=$('.vod-img img').attr('data-original')||$('.vod-img img').attr('src')||'';\nif(cover){\n  if(cover.startsWith('//')) cover='https:'+cover;\n  if(cover.startsWith('/')) cover=env.baseUrl+cover;\n}\nlet desc=$('.txt').text().trim();\n\nlet playlist=[];\nlet videos=[];\n\n// 找到播放页链接\nlet playLink=$('a.play').attr('href');\nif(playLink){\n  let playUrl=new URL(playLink,env.baseUrl).href;\n  const playResp=await req(playUrl,{timeout:30000});\n  const playHtml=playResp.content||playResp;\n  const $$=kitty.load(playHtml);\n  const script=$$('script').filter((i,el)=>$$(el).html().includes('player_data')).html();\n  if(script){\n    try{\n      const m=script.match(/player_data\\s*=\\s*(\\{.*?\\})/);\n      if(m){\n        const data=JSON.parse(m[1].replace(/\\\\\\//g,'/'));\n        if(data.url){\n          videos.push({text:'播放',id:data.url,type:'direct'});\n        }\n      }\n    }catch(e){}\n  }\n}\n\nif(videos.length) playlist.push({title:'播放列表',videos});\n\nreturn {id:url,title,cover,desc,playlist};"
+            }
+        }
+    },
+    {
+        "id": "xmoviesforyouTV",
+        "name": "🎬XMFYTV",
+        "api": "https://xmoviesforyou.com",
+        "type": 1,
+        "desc": "支持分类页、搜索页、详情页，嗅探或WEB切换",
+        "nsfw": true,
+        "extra": {
+            "gfw": false,
+            "searchLimit": 10,
+            "sniffer": {
+                "mode": 1,
+                "timeout": 30000,
+                "customRegex": "https?://[^\"'\\s]+\\.(?:m3u8|mp4)(?:\\?[^\"'\\s]*)?",
+                "exclude": "ads\\.|tracker\\.|doubleclick\\.|analytics\\.|\\.mp4\\.jpg|\\.jpg$|\\.jpeg$|\\.png$|\\.gif$|\\.webp$|\\.svg$"
+            },
+            "js": {
+                "category": [
+                    {
+                        "text": "二一",
+                        "id": "category/21sextury"
+                    },
+                    {
+                        "text": "肛交",
+                        "id": "category/anal"
+                    },
+                    {
+                        "text": "亚洲",
+                        "id": "category/asian"
+                    },
+                    {
+                        "text": "绑虐",
+                        "id": "category/bdsm"
+                    },
+                    {
+                        "text": "美女",
+                        "id": "category/babe-6985c035e1375"
+                    },
+                    {
+                        "text": "爆兄",
+                        "id": "category/bangbros"
+                    },
+                    {
+                        "text": "金发",
+                        "id": "category/blonde"
+                    },
+                    {
+                        "text": "爆趣",
+                        "id": "category/brazzers"
+                    },
+                    {
+                        "text": "棕发",
+                        "id": "category/brunette"
+                    },
+                    {
+                        "text": "射响",
+                        "id": "category/cumlouder"
+                    },
+                    {
+                        "text": "双网",
+                        "id": "category/ddfnetwork"
+                    },
+                    {
+                        "text": "光盘",
+                        "id": "category/dvd"
+                    },
+                    {
+                        "text": "黑美",
+                        "id": "category/ebony"
+                    },
+                    {
+                        "text": "假站",
+                        "id": "category/fakehub"
+                    },
+                    {
+                        "text": "群交",
+                        "id": "category/gangbang"
+                    },
+                    {
+                        "text": "硬核",
+                        "id": "category/hardcore"
+                    },
+                    {
+                        "text": "异族",
+                        "id": "category/interracial"
+                    },
+                    {
+                        "text": "杀克",
+                        "id": "category/killergram"
+                    },
+                    {
+                        "text": "辣趣",
+                        "id": "category/kinky"
+                    },
+                    {
+                        "text": "拉美",
+                        "id": "category/latina"
+                    },
+                    {
+                        "text": "女同",
+                        "id": "category/lesbian"
+                    },
+                    {
+                        "text": "熟母",
+                        "id": "category/milf"
+                    },
+                    {
+                        "text": "自慰",
+                        "id": "category/masturbation"
+                    },
+                    {
+                        "text": "狂徒",
+                        "id": "category/mofos"
+                    },
+                    {
+                        "text": "顽美",
+                        "id": "category/naughtyamerica"
+                    },
+                    {
+                        "text": "群宴",
+                        "id": "category/orgy"
+                    },
+                    {
+                        "text": "色专",
+                        "id": "category/pornpros"
+                    },
+                    {
+                        "text": "现王",
+                        "id": "category/realitykings"
+                    },
+                    {
+                        "text": "红发",
+                        "id": "category/redhead"
+                    },
+                    {
+                        "text": "色园",
+                        "id": "category/spizoo"
+                    },
+                    {
+                        "text": "喷射",
+                        "id": "category/squirt"
+                    },
+                    {
+                        "text": "纹身",
+                        "id": "category/tattoo"
+                    },
+                    {
+                        "text": "队色",
+                        "id": "category/teamskeet"
+                    },
+                    {
+                        "text": "少女",
+                        "id": "category/teen"
+                    },
+                    {
+                        "text": "三人",
+                        "id": "category/threesome"
+                    },
+                    {
+                        "text": "未分",
+                        "id": "category/uncategorized"
+                    }
+                ],
+                "home": "const cate = env.get('category') || 'category/21sextury';\nconst page = Number(env.get('page') || 1);\nconst url = `${env.baseUrl}/${cate}?page=${page}`;\nconst resp = await req(url, { timeout: 30000, headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36' } });\nconst html = resp.content || resp;\nif (!html) return [];\nlet items = [];\n\nconst regex = /<a href=\"(\\/[0-9]+\\/[^\"']+)\"[\\s\\S]*?<img[^>]*src=\"([^\"]+)\"[^>]*alt=\"([^\"]+)\"/g;\nlet m;\nwhile ((m = regex.exec(html)) !== null) {\n  const link = m[1];\n  const cover = m[2];\n  const title = m[3];\n  const id = `${env.baseUrl}${link}`;\n  items.push({ id, title, cover, desc: title });\n}\nreturn items;",
+                "search": "const wd = String(env.get('keyword') || '');\nconst page = Number(env.get('page') || 1);\nif (!wd) return [];\nconst url = `${env.baseUrl}/search?q=${encodeURIComponent(wd)}&page=${page}`;\nconst resp = await req(url, { timeout: 30000, headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36' } });\nconst html = resp.content || resp;\nif (!html) return [];\nlet items = [];\n\nconst regex = /<a href=\"(\\/[0-9]+\\/[^\"']+)\"[\\s\\S]*?<img[^>]*src=\"([^\"]+)\"[^>]*alt=\"([^\"]+)\"/g;\nlet m;\nwhile ((m = regex.exec(html)) !== null) {\n  const link = m[1];\n  const cover = m[2];\n  const title = m[3];\n  const id = `${env.baseUrl}${link}`;\n  items.push({ id, title, cover, desc: title });\n}\nreturn items;",
+                "detail": "const id = env.get('movieId') || '';\nconst url = new URL(id, env.baseUrl).href;\nconst resp = await req(url, { timeout: 30000, headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36', 'Referer': env.baseUrl, 'Accept-Language': 'en-US,en;q=0.9' } });\nconst html = resp.content || resp;\nif (!html) return {};\nlet playlist = [];\nlet videos = [];\n\n// 简介（正则作为字符串）\nlet desc = '';\nconst introRegexStr = \"<div class=\\\\\\\"prose[\\\\s\\\\S]*?<p[^>]*>([\\\\s\\\\S]*?)<\\\\/p>\";\nconst introRegex = new RegExp(introRegexStr, 'i');\nconst introMatch = html.match(introRegex);\nif (introMatch) desc = introMatch[1].replace(/<[^>]+>/g, '').trim();\n\n// 播放列表：正则作为字符串并用 new RegExp\nconst playRegexStr = \"<a\\\\s+href=\\\\\\\"(https?:\\\\/\\\\/[^\\\\\\\"]+)\\\\\\\"[^>]*>\\\\s*<span[^>]*>\\\\s*(STREAMTAPE|MIXDROP|DOODSTREAM|BIGWARP)\\\\s*<br\\\\s*\\\\/?>(?:\\\\s*<\\\\/span>)?\\\\s*<\\\\/a>\";\nconst playRegex = new RegExp(playRegexStr, 'gi');\nlet m;\nwhile ((m = playRegex.exec(html)) !== null) {\n const playUrl = m[1].trim();\n const text = m[2].trim();\n // 嗅探分组（保留现有播放方式）\n videos.push({ text, id: playUrl, type: 'direct' });\n}\nif (videos.length > 0) playlist.push({ title: '播放列表(嗅探)', videos });\n\n// 新增 iframe 播放分组\nlet iframeVideos = [];\nplayRegex.lastIndex = 0;\nwhile ((m = playRegex.exec(html)) !== null) {\n const playUrl = m[1].trim();\n const text = m[2].trim();\n iframeVideos.push({ text, url: playUrl, type: 'iframe' });\n}\nif (iframeVideos.length > 0) playlist.push({ title: '播放列表(Iframe)', videos: iframeVideos });\n\n// 封面和标题直接沿用 home 页抓到的\nreturn { id: url, title: env.get('title') || '', cover: env.get('cover') || '', desc, playlist };"
+            }
+        }
+    },
+    {
+        "id": "LCMHX",
+        "name": "🎨乐成漫画",
+        "api": "https://www.lcmhx.cc",
+        "type": 1,
+        "desc": "支持韩漫、单行本、同人志、Cosplay分类，分页，搜索，详情页简介和章节播放列表。",
+        "nsfw": true,
+        "extra": {
+            "js": {
+                "category": [
+                    {
+                        "text": "韩漫",
+                        "id": "mctype/1/"
+                    },
+                    {
+                        "text": "单本",
+                        "id": "mctype/2/"
+                    },
+                    {
+                        "text": "同人",
+                        "id": "mctype/3/"
+                    },
+                    {
+                        "text": "CosP",
+                        "id": "mctype/4/"
+                    }
+                ],
+                "home": "const cate=env.get('category')||'mctype/1/';\nconst page=Number(env.get('page')||1);\nconst url=`${env.baseUrl}/${cate.replace(/\\/$/,'')}-${page}/`;\nconst resp=await req(url,{timeout:30000});\nconst html=resp.content||resp;\nif(!html) return [];\nconst $=kitty.load(html);\nlet items=[];\n$('.elevation-3').each((i,el)=>{\n const link=$(el).find('a').attr('href');\n const title=$(el).find('.hv-title').text().trim();\n let cover=$(el).find('img').attr('src')||$(el).find('img').attr('data-src')||'';\n if(cover){\n if(cover.startsWith('//')) cover='https:'+cover;\n if(cover.startsWith('/')) cover=env.baseUrl+cover;\n }\n const view=$(el).find('.hv-subtitle').text().trim();\n if(link&&title){\n let id=new URL(link,env.baseUrl).href;\n items.push({id,title,cover,view});\n }\n});\nreturn items;",
+                "search": "const wd=String(env.get('keyword')||'');\nconst page=Number(env.get('page')||1);\nif(!wd) return [];\nconst url=`${env.baseUrl}/mcsearch/${encodeURIComponent(wd)}------${page}-/`;\nconst resp=await req(url,{timeout:30000});\nconst html=resp.content||resp;\nif(!html) return [];\nconst $=kitty.load(html);\nlet items=[];\n$('.search-result__item').each((i,el)=>{\n const link=$(el).attr('href');\n const title=$(el).find('.search-result__item__title').text().trim();\n let cover=$(el).find('.search-result__item__cover__img').attr('src')||'';\n if(cover){\n if(cover.startsWith('//')) cover='https:'+cover;\n if(cover.startsWith('/')) cover=env.baseUrl+cover;\n }\n if(link&&title){\n let id=new URL(link,env.baseUrl).href;\n items.push({id,title,cover});\n }\n});\nreturn items;",
+                "detail": "const id=env.get('movieId')||'';\nconst url=new URL(id,env.baseUrl).href;\nconst resp=await req(url,{timeout:30000});\nconst html=resp.content||resp;\nif(!html) return {};\nconst $=kitty.load(html);\n\nlet title=$('.hv-title').text().trim()||$('title').text().trim();\nlet cover=$('.hvc__media__cover__image').attr('src')||'';\nif(cover){\n if(cover.startsWith('//')) cover='https:'+cover;\n if(cover.startsWith('/')) cover=env.baseUrl+cover;\n}\nlet desc=$('div[style*=\"font-size\"]').text().trim();\n\nlet playlist=[];\nlet videos=[];\n\n// 所有分类统一：播放列表直接用详情页 URL，按钮改成“开始阅读”\nvideos.push({ text:'开始阅读', url:url, type:'iframe' });\nplaylist.push({ title:'章节列表', videos });\n\nreturn { id:url, title, cover, desc, playlist };"
+            }
+        }
+    },
+    {
+        "id": "libahao_novel",
+        "name": "📖篱笆文学",
+        "api": "https://www.libahao.cc",
+        "type": 1,
+        "desc": "支持分类、分页、搜索、详情页的小说插件",
+        "nsfw": false,
+        "extra": {
+            "js": {
+                "category": [
+                    {
+                        "text": "玄幻",
+                        "id": "/list1/"
+                    },
+                    {
+                        "text": "武侠",
+                        "id": "/list2/"
+                    },
+                    {
+                        "text": "都市",
+                        "id": "/list3/"
+                    },
+                    {
+                        "text": "历史",
+                        "id": "/list4/"
+                    },
+                    {
+                        "text": "网游",
+                        "id": "/list5/"
+                    },
+                    {
+                        "text": "科幻",
+                        "id": "/list6/"
+                    },
+                    {
+                        "text": "言情",
+                        "id": "/list7/"
+                    },
+                    {
+                        "text": "其他",
+                        "id": "/list8/"
+                    },
+                    {
+                        "text": "排行",
+                        "id": "/top/"
+                    },
+                    {
+                        "text": "完本",
+                        "id": "/full/"
+                    }
+                ],
+                "home": "const cate = env.get(\"category\") || '/list1/';\nconst page = Number(env.get(\"page\")||1);\nlet url = `${cate}${page}.html`;\nconst fullUrl = `${env.baseUrl}${url}`;\nconst resp = await req(fullUrl,{headers:{'User-Agent':'Mozilla/5.0','Referer':env.baseUrl},timeout:30000,charset:'utf-8'});\nconst html = resp.content || resp;\nif(!html) return [];\nconst $ = kitty.load(html,{decodeEntities:true});\nlet items = [];\n\nfor(const el of $('div.col-12.col-md-6 dl').toArray()){\n  const a = $(el).find('dd h3 a');\n  const id = a.attr('href');\n  const title = a.text().trim();\n  let cover = $(el).find('dt a img').attr('src');\n  if(cover && !cover.startsWith('http')) cover = `${env.baseUrl}${cover}`;\n\n  // remark 只取最新章节\n  const latest = $(el).find('dd.book_other').eq(3).text().trim();\n  let desc = '';\n\n  // 请求详情页获取简介\n  if(id){\n    try {\n      const detailResp = await req(`${env.baseUrl}${id}`,{\n        headers:{'User-Agent':'Mozilla/5.0','Referer':env.baseUrl},\n        timeout:30000,\n        charset:'utf-8'\n      });\n      const detailHtml = detailResp.content || detailResp;\n      const $$ = kitty.load(detailHtml,{decodeEntities:true});\n      desc = $$.find('strong:contains(\"简介：\")').parent().text().replace(/简介：/,'').trim();\n    } catch(e){ desc = ''; }\n  }\n\n  if(id && title){ items.push({id,title,cover,desc,remark:latest}); }\n}\nreturn items;",
+                "search": "const wd = String(env.get(\"keyword\")||'');\nconst page = Number(env.get(\"page\")||1);\nlet url = `/search.php?q=${encodeURIComponent(wd)}&p=${page}`;\nconst fullUrl = `${env.baseUrl}${url}`;\nconst resp = await req(fullUrl,{headers:{'User-Agent':'Mozilla/5.0','Referer':env.baseUrl},timeout:30000,charset:'utf-8'});\nconst html = resp.content || resp;\nif(!html) return [];\nconst $ = kitty.load(html,{decodeEntities:true});\nlet items = [];\n$('div.col-12.col-md-6 dl').each((i,el)=>{\n  const a = $(el).find('dd h3 a');\n  const id = a.attr('href');\n  const title = a.text().trim();\n  let cover = $(el).find('dt a img').attr('src');\n  if(cover && !cover.startsWith('http')) cover = `${env.baseUrl}${cover}`;\n  const latest = $(el).find('dd.book_other').eq(3).text().trim();\n  let desc = '';\n  // 请求详情页获取简介\n  if(id){\n    try {\n      const detailResp = await req(`${env.baseUrl}${id}`,{\n        headers:{'User-Agent':'Mozilla/5.0','Referer':env.baseUrl},\n        timeout:30000,\n        charset:'utf-8'\n      });\n      const detailHtml = detailResp.content || detailResp;\n      const $$ = kitty.load(detailHtml,{decodeEntities:true});\n      desc = $$.find('strong:contains(\"简介：\")').parent().text().replace(/简介：/,'').trim();\n    } catch(e){ desc = ''; }\n  }\n  if(id && title){ items.push({id,title,cover,desc,remark:latest}); }\n});\nreturn items;",
+                "detail": "const id = env.get(\"movieId\")||'';\nconst url = id.startsWith('http') ? id : `${env.baseUrl}${id}`;\nconst resp = await req(url,{headers:{'User-Agent':'Mozilla/5.0','Referer':env.baseUrl},timeout:30000,charset:'utf-8'});\nconst html = resp.content || resp;\nif(!html) return {};\nconst $ = kitty.load(html,{decodeEntities:true});\n\nlet title = $('div.book_info h1').text().trim() || env.get(\"title\") || \"\";\nlet cover = $('div.book_info img').attr('src') || '/images/nocover.jpg';\nif(cover && !cover.startsWith('http')) cover = `${env.baseUrl}${cover}`;\nlet desc = $('strong:contains(\"简介：\")').parent().text().replace(/简介：/,'').trim() || env.get(\"desc\") || \"\";\n\nlet playlist = [];\nlet videos = [];\n\n$('div.book_list ul.row li a').each((i,a)=>{\n  const href = $(a).attr('href');\n  const vtitle = $(a).text().trim();\n  if(href && vtitle){\n    videos.push({ text:vtitle, url:`${env.baseUrl}${href}`, type:'iframe' });\n  }\n});\n\nif(videos.length){ playlist.push({ title:'最新章节', videos }); }\n\nreturn { id, title, cover, desc, playlist };"
+            }
+        }
+    },
+    {
+        "id": "2026copy_manhua",
+        "name": "🎨拷贝漫画",
+        "api": "https://www.2026copy.com",
+        "type": 1,
+        "desc": "支持分类页、搜索页、详情页，正则提取视频信息，remark为状态，详情页即播放入口。",
+        "nsfw": true,
+        "extra": {
+            "js": {
+                "category": [
+                    {
+                        "text": "首页",
+                        "id": "comics?ordering=-datetime_updated"
+                    },
+                    {
+                        "text": "韩漫",
+                        "id": "comics?region=1&ordering=-datetime_updated"
+                    },
+                    {
+                        "text": "日漫",
+                        "id": "comics?region=0&ordering=-datetime_updated"
+                    },
+                    {
+                        "text": "美漫",
+                        "id": "comics?region=2&ordering=-datetime_updated"
+                    },
+                    {
+                        "text": "连载",
+                        "id": "comics?status=0&ordering=-datetime_updated"
+                    },
+                    {
+                        "text": "完结",
+                        "id": "comics?status=1&ordering=-datetime_updated"
+                    },
+                    {
+                        "text": "短篇",
+                        "id": "comics?status=2&ordering=-datetime_updated"
+                    }
+                ],
+                "home": "const cate = env.get('category') || 'comics?ordering=-datetime_updated';\nconst page = Number(env.get('page') || 1);\nconst offset = (page - 1) * 50;\nconst url = `${env.baseUrl}/${cate}&offset=${offset}&limit=50`;\nconst resp = await req(url, { timeout: 30000 });\nconst html = resp.content || resp;\nif (!html) return [];\n\nfunction decodeEntities(s) {\n return s.replace(/&#x27;/g, \"'\")\n .replace(/&quot;/g, '\"')\n .replace(/&amp;/g, '&')\n .replace(/&lt;/g, '<')\n .replace(/&gt;/g, '>');\n}\n\nfunction parseListFromHtml(html) {\n const listAttrRegex = /list=(?:\"([\\s\\S]*?)\"|'([\\s\\S]*?)')/i;\n const listMatch = html.match(listAttrRegex);\n if (!listMatch) return [];\n let raw = listMatch[1] || listMatch[2] || '';\n if (!raw) return [];\n raw = decodeEntities(raw);\n\n // 尝试把单引号伪 JSON 转为合法 JSON 并解析\n let candidate = raw.replace(/\\r?\\n/g, ' ');\n candidate = candidate.replace(/\\s*\\,\\s*\\}/g, '}').replace(/\\s*\\,\\s*\\]/g, ']');\n // 将单引号替换为双引号（示例数据中安全），并对内嵌双引号做简单转义处理\n const doubleQuoted = candidate.replace(/'/g, '\"');\n try {\n const arr = JSON.parse(doubleQuoted);\n if (Array.isArray(arr)) return arr;\n } catch (e) {\n // 解析失败则回退正则提取\n }\n\n // 回退：用正则在 raw 中逐条提取字段\n const out = [];\n const itemRegex = /'path_word'\\s*:\\s*'([^']+)'[\\s\\S]*?'name'\\s*:\\s*'([^']+)'[\\s\\S]*?'cover'\\s*:\\s*'([^']+)'[\\s\\S]*?'status'\\s*:\\s*(\\d+)/g;\n let m;\n while ((m = itemRegex.exec(raw)) !== null) {\n out.push({ path_word: m[1], name: m[2], cover: m[3], status: Number(m[4]) });\n }\n return out;\n}\n\nconst parsed = parseListFromHtml(html);\nconst items = [];\nfor (const it of parsed) {\n const path_word = it.path_word || it.pathWord || '';\n const title = it.name || it.title || '';\n const cover = it.cover || '';\n const status = (typeof it.status !== 'undefined') ? String(it.status) : '';\n const id = `${env.baseUrl}/comic/${path_word}`;\n let remark = '';\n if (status === '0') remark = '连载';\n else if (status === '1') remark = '完结';\n else if (status === '2') remark = '短篇';\n items.push({ id, title, cover, remark, desc: title });\n}\nreturn items;",
+                "search": "const wd = String(env.get('keyword') || '');\nif (!wd) return [];\nconst url = `${env.baseUrl}/api/kb/web/searchcd/comics?offset=0&platform=2&limit=12&q=${encodeURIComponent(wd)}&q_type=name`;\nconst resp = await req(url, { timeout: 30000 });\nconst data = resp.content || resp;\nif (!data) return [];\nlet json;\ntry { json = JSON.parse(data); } catch (e) { return []; }\nconst items = [];\nif (json.results && json.results.list && Array.isArray(json.results.list)) {\n for (const it of json.results.list) {\n const path_word = it.path_word || '';\n const title = it.name || '';\n const cover = it.cover || '';\n const id = `${env.baseUrl}/comic/${path_word}`;\n let authors = '';\n if (it.author && Array.isArray(it.author)) {\n authors = it.author.map(a => a.name).join(', ');\n }\n items.push({ id, title, cover, remark: it.popular ? `热度 ${it.popular}` : '', desc: authors ? `作者: ${authors}` : title });\n }\n}\nreturn items;",
+                "detail": "const id = env.get('movieId') || '';\nconst url = new URL(id, env.baseUrl).href;\nconst resp = await req(url, { timeout: 30000 });\nconst html = resp.content || resp;\nif (!html) return {};\nlet title = '';\nlet cover = '';\nlet desc = '';\nlet playlist = [];\nlet videos = [];\n\n// 提取简介\nconst introRegex = /<p\\s+class=[\"']intro[\"'][^>]*>([\\s\\S]*?)<\\/p>/i;\nconst introMatch = html.match(introRegex);\nif (introMatch) desc = introMatch[1].trim();\n\n// 精确提取第一个章节链接\nconst chapterRegex = /<a[^>]*href=[\"']([^\"']*\\/comic\\/[^\"']*\\/chapter\\/[^\"']*)[\"'][^>]*class=[\"'][^\"']*comicParticulars-botton[^\"']*[\"'][^>]*>[\\s\\S]*?開始閱讀[\\s\\S]*?<\\/a>/i;\nlet chapterMatch = html.match(chapterRegex);\n\n// 回退：匹配任意含 /chapter/ 的 a 标签\nif (!chapterMatch) {\n const looseRegex = /<a[^>]*href=[\"']([^\"']*\\/chapter\\/[^\"']*)[\"'][^>]*>[\\s\\S]*?開始閱讀[\\s\\S]*?<\\/a>/i;\n chapterMatch = html.match(looseRegex);\n}\n\nif (chapterMatch) {\n const href = chapterMatch[1];\n const playUrl = new URL(href, env.baseUrl).href;\n videos.push({ text: '開始閱讀', url: playUrl, type: 'iframe' });\n playlist.push({ title: '播放列表', videos });\n}\n\n// 标题\nconst titleRegex = /<title>([\\s\\S]*?)<\\/title>/i;\nconst titleMatch = html.match(titleRegex);\nif (titleMatch) title = titleMatch[1].trim();\n\n// 封面\nconst coverRegex = /<meta[^>]*property=[\"']og:image[\"'][^>]*content=[\"']([^\"']+)[\"']/i;\nconst coverMatch = html.match(coverRegex);\nif (coverMatch) cover = coverMatch[1];\n\nreturn { id: url, title, cover, desc, playlist };"
+            }
+        }
+    }
+]
