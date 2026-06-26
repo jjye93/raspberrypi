@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-echo "Raspberry Pi 5 installation script"
+echo "Installation script"
 echo "Please select a package to install"
 
 pause_and_return() {
@@ -23,7 +23,7 @@ Update_Upgrade() {
 
 Docker() {
     echo "Installing Docker"
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/jjye93/raspberrypi/refs/heads/main/install-script/docker/install.sh)"
+    bash -c "$(curl -fsSL https://get.docker.com)"
     echo "Completed"
     pause_and_return
 }
